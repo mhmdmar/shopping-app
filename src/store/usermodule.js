@@ -1,8 +1,19 @@
 export default {
     state: {
-        loggedIn: false
+        _user: null
     },
-    mutations: {},
+    mutations: {
+        setUser(state, user) {
+            state._user = user;
+        },
+        logoutUser(state) {
+            state._user = null;
+        }
+    },
     actions: {},
-    modules: {}
+    getters: {
+        user(state) {
+            return state._user;
+        }
+    }
 };

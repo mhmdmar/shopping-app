@@ -4,7 +4,8 @@ import {host} from "@/services/server.json";
 const users = [
     {
         username: "mhmdmar",
-        password: "123456"
+        password: "123456",
+        profilePicture: ""
     },
     {
         username: "admin",

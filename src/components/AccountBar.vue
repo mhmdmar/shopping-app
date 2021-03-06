@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="account-container" v-if="loggedIn">
-            <img :src="avatarImg" alt="img_avatar" />
-            <span class="username">User name</span>
+        <div class="account-container" v-if="!!user">
+            <img :src="userProfilePicture" alt="img_avatar" />
+            <span class="username">{{ username }}</span>
             <b-dropdown
                 id="dropdown-right"
                 right
@@ -10,7 +10,9 @@
                 variant="primary"
                 class="s-1"
             >
-                <b-dropdown-item href="#">Logout</b-dropdown-item>
+                <b-dropdown-item href="#" @click="logout"
+                    >Logout</b-dropdown-item
+                >
             </b-dropdown>
         </div>
         <div v-else>
@@ -21,7 +23,8 @@
 
 <script>
     import avatarImg from "@/assets/img_avatar.png";
-    import {mapState} from "vuex";
+    import {mapGetters} from "vuex";
+    import {routesPaths} from "@/router/routes";
     export default {
         name: "AccountBar",
         data() {
@@ -29,7 +32,21 @@
                 avatarImg
             };
         },
-        computed: mapState(["loggedIn"])
+        methods: {
+            logout() {
+                this.$store.commit("logoutUser");
+                this.$router.push(routesPaths.home);
+            }
+        },
+        computed: {
+            ...mapGetters(["user"]),
+            username() {
+                return this.user.username || "";
+            },
+            userProfilePicture() {
+                return this.user.profilePicture || avatarImg;
+            }
+        }
     };
 </script>
 

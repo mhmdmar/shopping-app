@@ -6,8 +6,7 @@ function getServerAddressEndPoint(endpoint) {
 }
 export const userService = {
     async getAccounts() {
-        let res = await axios.get(getServerAddressEndPoint("api/users"));
-        console.log(res);
+        return await axios.get(getServerAddressEndPoint("api/users"));
     },
     async getAccount(username, password) {
         let res = await axios.get(
@@ -15,6 +14,10 @@ export const userService = {
                 `api/user?username=${username}&password=${password}`
             )
         );
-        return res.data;
+        if (res.status === 200) {
+            return res.data;
+        } else {
+            return null;
+        }
     }
 };

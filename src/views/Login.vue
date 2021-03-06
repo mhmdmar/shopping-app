@@ -26,7 +26,7 @@
 
 <script>
     import {userService} from "@/services/userService";
-
+    import {routesPaths} from "@/router/routes";
     export default {
         name: "Login",
         data() {
@@ -35,12 +35,16 @@
                 password: ""
             };
         },
+        mounted() {},
         methods: {
             login() {
                 userService
                     .getAccount(this.username, this.password)
-                    .then(response => {
-                        console.log(response);
+                    .then(user => {
+                        if (user !== null) {
+                            this.$store.commit("setUser", user);
+                            this.$router.push(routesPaths.user);
+                        }
                     })
                     .catch(err => {
                         console.log(err);
