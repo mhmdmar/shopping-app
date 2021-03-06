@@ -1,33 +1,29 @@
 <template>
-    <div class="topnav">
-        <router-link
-            class="topnav-item left"
-            v-for="(route, i) in routes"
-            :key="i"
-            :to="route.path"
-            >{{ route.name }}</router-link
-        >
-        <AccountBar class="topnav-item right"></AccountBar>
+    <div>
+        <div class="topnav">
+            <template v-for="(route, index) in routes">
+                <router-link
+                    class="topnav-item route-item"
+                    v-if="!route.hidden"
+                    :key="index"
+                    :to="route.path"
+                    >{{ route.name }}</router-link
+                >
+            </template>
+            <AccountBar class="topnav-item account-bar"></AccountBar>
+        </div>
     </div>
 </template>
 
 <script>
-    const routes = [
-        {
-            name: "Home",
-            path: "/"
-        },
-        {
-            name: "About",
-            path: "/about"
-        }
-    ];
+    import {routes} from "@/router/routes.js";
     import AccountBar from "@/components/AccountBar.vue";
     export default {
         name: "Topbar.vue",
         components: {
             AccountBar
         },
+        computed: {},
         data() {
             return {
                 routes
@@ -38,7 +34,8 @@
 
 <style scoped lang="scss">
     .topnav {
-        overflow: hidden;
+        display: flex;
+        align-items: center;
         background-color: #333;
         & > .topnav-item {
             color: #f2f2f2;
@@ -46,20 +43,19 @@
             padding: 14px 16px;
             text-decoration: none;
             font-size: 17px;
-            &:hover {
-                background-color: #ddd;
-                color: black;
-            }
+        }
+        & > .route-item {
             &:active {
                 background-color: #4caf50;
                 color: white;
             }
+            &:hover {
+                background-color: #ddd;
+                color: black;
+            }
         }
     }
-    .right {
-        float: right;
-    }
-    .left {
-        float: left;
+    .account-bar {
+        margin-left: auto;
     }
 </style>

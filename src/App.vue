@@ -7,10 +7,14 @@
 
 <script>
     import Topbar from "@/components/Topbar.vue";
+
     export default {
         name: "App",
         components: {
             Topbar
+        },
+        data() {
+            return {};
         }
     };
 </script>
