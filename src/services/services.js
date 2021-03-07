@@ -4,4 +4,3 @@ export const services = {
 };
 
 export const BASE_URI = process.env.VUE_APP_BASE_URI + "/api";
-console.log(BASE_URI);
