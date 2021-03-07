@@ -1,18 +1,13 @@
-import {host} from "@/services/server.json";
+import {BASE_URI} from "@/services/services.js";
 import axios from "axios";
 
-function getServerAddressEndPoint(endpoint) {
-    return `${host}/${endpoint}`;
-}
 export const userService = {
     async getAccounts() {
-        return await axios.get(getServerAddressEndPoint("api/users"));
+        return await axios.get(BASE_URI + "/users");
     },
     async getAccount(username, password) {
         let res = await axios.get(
-            getServerAddressEndPoint(
-                `api/user?username=${username}&password=${password}`
-            )
+            `${BASE_URI}/user?username=${username}&password=${password}`
         );
         if (res.status === 200) {
             return res.data;

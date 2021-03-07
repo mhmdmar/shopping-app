@@ -1,5 +1,5 @@
 import {createServer} from "miragejs";
-import {host} from "@/services/server.json";
+import {BASE_URI} from "@/services/services.js";
 
 const users = [
     {
@@ -15,10 +15,10 @@ const users = [
 export function makeServer() {
     return createServer({
         routes() {
-            this.get(`${host}/api/users`, () => ({
+            this.get(`${BASE_URI}/users`, () => ({
                 users
             }));
-            this.get(`${host}/api/user`, () => ({
+            this.get(`${BASE_URI}/user`, () => ({
                 username: users[0].username,
                 password: users[0].password
             }));

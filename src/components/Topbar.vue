@@ -37,6 +37,7 @@
         display: flex;
         align-items: center;
         background-color: #333;
+        height: 50px;
         & > .topnav-item {
             color: #f2f2f2;
             text-align: center;

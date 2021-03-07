@@ -42,7 +42,9 @@
         methods: {
             logout() {
                 this.$store.commit("logoutUser");
-                this.$router.push(routesPaths.home);
+                if (this.$route.path !== routesPaths.home) {
+                    this.$router.push(routesPaths.home);
+                }
             }
         },
         computed: {
