@@ -4,6 +4,7 @@ export const routesPaths = {
     home: "/",
     about: "/about",
     login: "/login",
+    register: "/register",
     user: "/user",
     notFound: "/404"
 };
@@ -28,6 +29,13 @@ export const routes = [
         hidden: true,
         component: () =>
             import(/* webpackChunkName: "login" */ "@/views/Login.vue")
+    },
+    {
+        path: routesPaths.register,
+        name: "Register",
+        hidden: true,
+        component: () =>
+            import(/* webpackChunkName: "login" */ "@/views/Register.vue")
     },
     {
         path: routesPaths.user,

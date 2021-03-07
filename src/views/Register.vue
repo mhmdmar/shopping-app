@@ -1,5 +1,14 @@
 <template>
     <div class="container">
+        <label for="email"><b>Email</b></label>
+        <input
+            v-model="email"
+            type="text"
+            placeholder="Enter Username"
+            name="email"
+            id="email"
+            required
+        />
         <label for="username"><b>Username</b></label>
         <input
             v-model="username"
@@ -20,16 +29,15 @@
             required
         />
 
-        <button type="submit" @click="login">Login</button>
-        <router-link :to="registerPath">Register</router-link>
+        <button type="submit" @click="register">Register</button>
+        <router-link :to="loginPath">Login</router-link>
     </div>
 </template>
 
 <script>
-    import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
     export default {
-        name: "Login",
+        name: "Register",
         beforeCreate() {
             if (this.$store.getters.user !== null) {
                 this.$router.push(routesPaths.user);
@@ -39,23 +47,14 @@
             return {
                 username: "",
                 password: "",
-                registerPath: routesPaths.register
+                email: "",
+                loginPath: routesPaths.login
             };
         },
         mounted() {},
         methods: {
-            login() {
-                userService
-                    .getAccount(this.username, this.password)
-                    .then(user => {
-                        if (user !== null) {
-                            this.$store.commit("loginUser", user);
-                            this.$router.push(routesPaths.user);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+            register() {
+                console.log("Sign up");
             }
         }
     };

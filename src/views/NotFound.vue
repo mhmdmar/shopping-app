@@ -13,7 +13,10 @@
                         Sorry, an error has occured, Requested page not found!
                     </div>
                     <div class="error-actions">
-                        <router-link to="/" class="btn btn-primary btn-lg">
+                        <router-link
+                            :to="homePath"
+                            class="btn btn-primary btn-lg"
+                        >
                             <span class="glyphicon glyphicon-home">
                                 Take Me Home
                             </span>
@@ -24,7 +27,18 @@
         </div>
     </div>
 </template>
+<script>
+    import {routesPaths} from "@/router/routes";
 
+    export default {
+        name: "AccountBar",
+        data() {
+            return {
+                homePath: routesPaths.home
+            };
+        }
+    };
+</script>
 <style>
     .error-template {
         padding: 40px 15px;

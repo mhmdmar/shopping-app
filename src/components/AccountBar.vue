@@ -10,13 +10,17 @@
                 variant="primary"
                 class="s-1"
             >
+                <b-dropdown-item href="#">Placeholder</b-dropdown-item>
+                <b-dropdown-item href="#">Placeholder</b-dropdown-item>
+                <b-dropdown-item href="#">Placeholder</b-dropdown-item>
+                <div class="dropdown-divider"></div>
                 <b-dropdown-item href="#" @click="logout"
                     >Logout</b-dropdown-item
                 >
             </b-dropdown>
         </div>
         <div v-else>
-            <router-link to="/login">Login</router-link>
+            <router-link :to="loginPath">Login</router-link>
         </div>
     </div>
 </template>
@@ -36,7 +40,8 @@
         },
         data() {
             return {
-                avatarImg
+                avatarImg,
+                loginPath: routesPaths.login
             };
         },
         methods: {
