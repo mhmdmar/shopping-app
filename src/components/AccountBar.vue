@@ -25,8 +25,15 @@
     import avatarImg from "@/assets/img_avatar.png";
     import {mapGetters} from "vuex";
     import {routesPaths} from "@/router/routes";
+    import localStorage from "@/services/localStorage";
     export default {
         name: "AccountBar",
+        beforeCreate() {
+            const user = localStorage.getValue("user");
+            if (user !== undefined) {
+                this.$store.commit("loginUser", user);
+            }
+        },
         data() {
             return {
                 avatarImg

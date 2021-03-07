@@ -29,6 +29,11 @@
     import {routesPaths} from "@/router/routes";
     export default {
         name: "Login",
+        beforeCreate() {
+            if (this.$store.getters.user !== null) {
+                this.$router.push(routesPaths.user);
+            }
+        },
         data() {
             return {
                 username: "",
@@ -42,7 +47,7 @@
                     .getAccount(this.username, this.password)
                     .then(user => {
                         if (user !== null) {
-                            this.$store.commit("setUser", user);
+                            this.$store.commit("loginUser", user);
                             this.$router.push(routesPaths.user);
                         }
                     })

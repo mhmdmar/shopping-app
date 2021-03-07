@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-import {routes} from "@/router/routes.js";
+import {routes, routesPaths} from "@/router/routes.js";
 import store from "@/store/index.js";
 const router = new VueRouter({
     mode: "history",
@@ -12,11 +12,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    const isLoggedIn = store.getters.user !== null;
     let target;
-    if (to.meta.requiredAuth) {
-        if (!store.getters.user) {
-            target = "/login";
-        }
+    if (to.meta.requiredAuth && !isLoggedIn) {
+        target = routesPaths.login;
     }
     next(target);
 });
