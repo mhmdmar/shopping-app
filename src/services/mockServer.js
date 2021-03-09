@@ -5,7 +5,7 @@ const users = [
     {
         username: "mhmdmar",
         password: "123456",
-        profilePicture: ""
+        profilePicture: "logo.png"
     },
     {
         username: "admin",
@@ -18,10 +18,7 @@ export function makeServer() {
             this.get(`${BASE_URI}/users`, () => ({
                 users
             }));
-            this.get(`${BASE_URI}/user`, () => ({
-                username: users[0].username,
-                password: users[0].password
-            }));
+            this.get(`${BASE_URI}/user`, () => users[0]);
         }
     });
 }

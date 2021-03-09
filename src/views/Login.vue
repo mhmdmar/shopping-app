@@ -87,7 +87,8 @@
                             }
                         })
                         .catch(err => {
-                            this.loginErrMsg = "server error, please try again";
+                            this.loginErrMsg =
+                                "server error, please try again later";
                             console.log(err);
                         });
                 }
