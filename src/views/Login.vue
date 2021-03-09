@@ -1,27 +1,44 @@
 <template>
     <div class="container">
-        <label for="username"><b>Username</b></label>
-        <input
-            v-model="username"
-            type="text"
-            placeholder="Enter Username"
-            name="username"
-            id="username"
-            required
-        />
+        <form novalidate class="g-3 needs-validation" @onsubmit.prevent>
+            <div class="col-12">
+                <label for="username" class="form-label"><b>Username</b></label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    v-model="username"
+                    required
+                />
+            </div>
+            <div class="col-12">
+                <label for="password" class="form-label"><b>Password</b></label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    v-model="password"
+                    required
+                />
+            </div>
 
-        <label for="password"><b>Password</b></label>
-        <input
-            v-model="password"
-            type="password"
-            placeholder="Enter Password"
-            name="password"
-            id="password"
-            required
-        />
-
-        <button type="submit" @click="login">Login</button>
-        <router-link :to="registerPath">Register</router-link>
+            <div class="col-12">
+                <button
+                    :class="loginErrMsg ? 'is-invalid' : ''"
+                    class="btn btn-primary"
+                    type="submit"
+                    @click.prevent="login"
+                >
+                    Login
+                </button>
+                <div class="invalid-tooltip">
+                    {{ loginErrMsg }}
+                </div>
+            </div>
+            <div class="col-2">
+                <router-link :to="registerPath">Register</router-link>
+            </div>
+        </form>
     </div>
 </template>
 
@@ -39,41 +56,52 @@
             return {
                 username: "",
                 password: "",
+                loginAttempts: 0,
+                loginErrMsg: "",
                 registerPath: routesPaths.register
             };
         },
         mounted() {},
         methods: {
+            validateForm() {
+                if (this.username === "") {
+                    return "empty username";
+                }
+                if (this.password === "") {
+                    return "empty password";
+                }
+            },
+
             login() {
-                userService
-                    .getAccount(this.username, this.password)
-                    .then(user => {
-                        if (user !== null) {
-                            this.$store.commit("loginUser", user);
-                            this.$router.push(routesPaths.user);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                this.loginAttempts++;
+                this.loginErrMsg = this.validateForm();
+                if (!this.loginErrMsg) {
+                    userService
+                        .getAccount(this.username, this.password)
+                        .then(user => {
+                            if (user !== null) {
+                                this.$store.commit("loginUser", user);
+                                this.$router.push(routesPaths.user);
+                            } else {
+                                this.loginErrMsg = "invalid username/password";
+                            }
+                        })
+                        .catch(err => {
+                            this.loginErrMsg = "server error, please try again";
+                            console.log(err);
+                        });
+                }
             }
         }
     };
 </script>
 
 <style scoped>
+    .container {
+        padding: 16px;
+    }
     form {
         border: 3px solid #f1f1f1;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
     }
 
     button {
@@ -86,11 +114,11 @@
         width: 100%;
     }
 
-    button:hover {
-        opacity: 0.8;
+    .col-12 {
+        margin-bottom: 35px;
     }
 
-    .container {
-        padding: 16px;
+    .invalid-tooltip {
+        left: inherit;
     }
 </style>
