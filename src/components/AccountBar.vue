@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import avatarImg from "@/assets/img_avatar.png";
+    import avatarImg from "../../public/images/img_avatar.png";
     import {mapGetters} from "vuex";
     import {routesPaths} from "@/router/routes";
     import localStorage from "@/services/localStorage";

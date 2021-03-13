@@ -12,11 +12,8 @@
         name: "App",
         components: {
             Topbar
-        },
-        data() {
-            return {};
         }
     };
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss"></style>

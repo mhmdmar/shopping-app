@@ -6,6 +6,7 @@ export const routesPaths = {
     login: "/login",
     register: "/register",
     user: "/user",
+    product: "/product/:id",
     notFound: "/404"
 };
 export const routes = [
@@ -46,6 +47,13 @@ export const routes = [
         meta: {
             requiredAuth: true
         }
+    },
+    {
+        path: routesPaths.product,
+        name: "Product",
+        hidden: true,
+        component: () =>
+            import(/* webpackChunkName: "user" */ "@/views/ProductPage.vue")
     },
     {
         path: routesPaths.notFound,
