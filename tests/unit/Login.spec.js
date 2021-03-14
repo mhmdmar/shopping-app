@@ -1,11 +1,11 @@
 import wrapComponent from "./shared/wrapper";
-import NotFound from "@/views/NotFound.vue";
+import Login from "@/views/Login.vue";
 
-describe("NotFound.vue", () => {
+describe("Login.vue", () => {
     let wrapper;
 
     beforeEach(() => {
-        wrapper = wrapComponent(NotFound);
+        wrapper = wrapComponent(Login);
     });
 
     it("sanity test", () => {
