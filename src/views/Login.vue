@@ -78,16 +78,18 @@
                 if (!this.loginErrMsg) {
                     userService
                         .getAccount(this.username, this.password)
-                        .then(user => {
-                            if (user !== null) {
-                                this.$store.commit("loginUser", user);
+                        .then(response => {
+                            const {error, user} = response;
+                            if (user !== null && user !== undefined) {
+                                this.$store.commit("loginUser", response.user);
                                 this.$router.push(routesPaths.user);
                             } else {
-                                this.loginErrMsg = "invalid username/password";
+                                this.loginErrMsg = error;
                             }
                         })
                         .catch(err => {
-                            this.loginErrMsg = "server error, please try again";
+                            this.loginErrMsg =
+                                "server error, please try again later";
                             console.log(err);
                         });
                 }

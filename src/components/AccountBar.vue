@@ -26,7 +26,6 @@
 </template>
 
 <script>
-    import avatarImg from "@/assets/img_avatar.png";
     import {mapGetters} from "vuex";
     import {routesPaths} from "@/router/routes";
     import localStorage from "@/services/localStorage";
@@ -40,7 +39,6 @@
         },
         data() {
             return {
-                avatarImg,
                 loginPath: routesPaths.login
             };
         },
@@ -58,7 +56,8 @@
                 return this.user.username || "";
             },
             userProfilePicture() {
-                return this.user.profilePicture || avatarImg;
+                let img = this.user.profilePicture || "img_avatar.png";
+                return "/img/" + img;
             }
         }
     };
