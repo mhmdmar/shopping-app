@@ -10,7 +10,7 @@
                         404 Not Found
                     </h2>
                     <div class="error-details">
-                        Sorry, an error has occured, Requested page not found!
+                        Sorry, an error has occurred, Requested page not found!
                     </div>
                     <div class="error-actions">
                         <router-link
