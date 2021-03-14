@@ -45,13 +45,11 @@
 <script>
     import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
+    import {mapGetters, mapMutations} from "vuex";
+    import {userMixin} from "@/mixin/user";
     export default {
         name: "Login",
-        beforeCreate() {
-            if (this.$store.getters.user !== null) {
-                this.$router.push(routesPaths.user);
-            }
-        },
+        mixins: [userMixin],
         data() {
             return {
                 username: "",
@@ -61,8 +59,11 @@
                 registerPath: routesPaths.register
             };
         },
-        mounted() {},
+        computed: {
+            ...mapGetters(["user"])
+        },
         methods: {
+            ...mapMutations(["loginUser", "logoutUser"]),
             validateForm() {
                 if (this.username === "") {
                     return "empty username";
@@ -71,7 +72,6 @@
                     return "empty password";
                 }
             },
-
             login() {
                 this.loginAttempts++;
                 this.loginErrMsg = this.validateForm();
@@ -81,7 +81,7 @@
                         .then(response => {
                             const {error, user} = response;
                             if (user !== null && user !== undefined) {
-                                this.$store.commit("loginUser", response.user);
+                                this.loginUser(user);
                                 this.$router.push(routesPaths.user);
                             } else {
                                 this.loginErrMsg = error;

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import {routesPaths} from "@/router/routes";
     import localStorage from "@/services/localStorage";
     export default {
@@ -34,7 +34,7 @@
         beforeCreate() {
             const user = localStorage.getValue("user");
             if (user !== undefined) {
-                this.$store.commit("loginUser", user);
+                this.loginUser(user);
             }
         },
         data() {
@@ -43,8 +43,9 @@
             };
         },
         methods: {
+            ...mapMutations(["loginUser", "logoutUser"]),
             logout() {
-                this.$store.commit("logoutUser");
+                this.logoutUser();
                 if (this.$route.path !== routesPaths.home) {
                     this.$router.push(routesPaths.home);
                 }
@@ -56,8 +57,7 @@
                 return this.user.username || "";
             },
             userProfilePicture() {
-                let img = this.user.profilePicture || "img_avatar.png";
-                return "/img/" + img;
+                return this.user.profilePicture || "/images/img_avatar.png";
             }
         }
     };
