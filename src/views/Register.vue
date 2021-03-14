@@ -65,12 +65,16 @@
             </div>
             <div class="col-12">
                 <button
+                    :class="registerErrMessage ? 'is-invalid' : ''"
                     class="btn btn-primary"
                     type="submit"
                     @click.prevent="register"
                 >
                     Register
                 </button>
+                <div class="invalid-tooltip">
+                    {{ registerErrMessage }}
+                </div>
             </div>
             <div class="col-2">
                 <router-link :to="loginPath">Login</router-link>
@@ -80,6 +84,7 @@
 </template>
 
 <script>
+    import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
     export default {
         name: "Register",
@@ -93,6 +98,7 @@
                 username: "",
                 password: "",
                 email: "",
+                registerErrMessage: "",
                 termsAndConditionChecked: false,
                 loginPath: routesPaths.login,
                 registrationAttempts: 0
@@ -162,7 +168,26 @@
             register() {
                 this.registrationAttempts++;
                 if (this.isFormValid()) {
-                    console.log("Register");
+                    userService
+                        .registerAccount(
+                            this.email,
+                            this.username,
+                            this.password
+                        )
+                        .then(response => {
+                            const {error, user} = response;
+                            if (user !== null && user !== undefined) {
+                                this.$store.commit("loginUser", response.user);
+                                this.$router.push(routesPaths.user);
+                            } else {
+                                this.registerErrMessage = error;
+                            }
+                        })
+                        .catch(err => {
+                            this.registerErrMessage =
+                                "server error, please try again later";
+                            console.log(err);
+                        });
                 }
             }
         }
