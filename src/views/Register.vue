@@ -56,7 +56,10 @@
                         required
                     />
                     <label class="form-check-label" for="termsAndConditions">
-                        Agree to terms and conditions
+                        Agree to the
+                        <router-link :to="termsAndCondition">
+                            terms and conditions
+                        </router-link>
                     </label>
                     <div class="invalid-tooltip">
                         {{ validTermsAndCondition.errMsg }}
@@ -100,6 +103,7 @@
                 registerErrMessage: "",
                 termsAndConditionChecked: false,
                 loginPath: routesPaths.login,
+                termsAndCondition: routesPaths.termsAndCondition,
                 registrationAttempts: 0
             };
         },
