@@ -16,4 +16,4 @@
     };
 </script>
 
-<style lang="scss"></style>
+<style scoped lang="scss"></style>
