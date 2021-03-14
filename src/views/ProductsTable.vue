@@ -87,4 +87,12 @@
         overflow: visible;
         width: 31.33%;
     }
+    @media only screen and (max-width: 600px) {
+        .products-table-container {
+            overflow: scroll;
+        }
+        .product-column {
+            width: inherit;
+        }
+    }
 </style>
