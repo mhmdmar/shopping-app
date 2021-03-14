@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="account-container" v-if="!!user">
-            <img :src="userProfilePicture" alt="img_avatar" />
+        <div class="account-container" v-if="!isNil(user)">
+            <img :src="userProfilePicture" :alt="username" />
             <span class="username">{{ username }}</span>
             <b-dropdown
                 id="dropdown-right"
@@ -29,11 +29,13 @@
     import {mapGetters, mapMutations} from "vuex";
     import {routesPaths} from "@/router/routes";
     import localStorage from "@/services/localStorage";
+    import {utillyMixin} from "@/mixin/utilly.js";
     export default {
         name: "AccountBar",
-        beforeCreate() {
+        mixins: [utillyMixin],
+        mounted() {
             const user = localStorage.getValue("user");
-            if (user !== undefined) {
+            if (!this.isNil(user)) {
                 this.loginUser(user);
             }
         },
@@ -57,7 +59,7 @@
                 return this.user.username || "";
             },
             userProfilePicture() {
-                return this.user.profilePicture || "/images/img_avatar.png";
+                return this.user.profilePicture || "images/img_avatar.png";
             }
         }
     };

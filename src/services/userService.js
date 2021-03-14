@@ -38,7 +38,7 @@ export const userService = {
             email,
             username,
             password,
-            profilePicture: "img_avatar.png",
+            profilePicture: "/images/img_avatar.png",
             registrationDate: Date.now()
         });
         let success = false;
