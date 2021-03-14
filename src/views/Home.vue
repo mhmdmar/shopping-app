@@ -1,16 +1,16 @@
 <template>
     <div class="home">
-        <SignIn></SignIn>
+        <ProductsTable></ProductsTable>
     </div>
 </template>
 
 <script>
-    import SignIn from "@/components/SignIn.vue";
-
+    import ProductsTable from "@/views/ProductsTable";
     export default {
         name: "Home",
         components: {
-            SignIn
+            ProductsTable
         }
     };
 </script>
+<style></style>

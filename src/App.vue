@@ -12,9 +12,6 @@
         name: "App",
         components: {
             Topbar
-        },
-        data() {
-            return {};
         }
     };
 </script>
