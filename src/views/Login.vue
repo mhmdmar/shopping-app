@@ -1,6 +1,11 @@
 <template>
     <div class="container">
-        <form novalidate class="g-3 needs-validation" @onsubmit.prevent>
+        <form
+            novalidate
+            class="g-3 needs-validation"
+            @onsubmit.prevent
+            v-if="isNil(user)"
+        >
             <div class="col-12">
                 <label for="username" class="form-label"><b>Username</b></label>
                 <input
@@ -43,13 +48,15 @@
 </template>
 
 <script>
-    import {userService} from "@/services/userService";
-    import {routesPaths} from "@/router/routes";
+    import {userService} from "@/services/userService.js";
+    import {routesPaths} from "@/router/routes.js";
     import {mapGetters, mapMutations} from "vuex";
-    import {userMixin} from "@/mixin/user";
+    import {userMixin} from "@/mixin/user.js";
+    import {utillyMixin} from "@/mixin/utilly.js";
+
     export default {
         name: "Login",
-        mixins: [userMixin],
+        mixins: [userMixin, utillyMixin],
         data() {
             return {
                 username: "",
