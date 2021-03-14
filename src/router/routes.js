@@ -7,6 +7,7 @@ export const routesPaths = {
     register: "/register",
     user: "/user",
     product: "/product/:id",
+    termsAndCondition: "/termsAndCondition",
     notFound: "/404"
 };
 export const routes = [
@@ -54,6 +55,15 @@ export const routes = [
         hidden: true,
         component: () =>
             import(/* webpackChunkName: "user" */ "@/views/ProductPage.vue")
+    },
+    {
+        path: routesPaths.termsAndCondition,
+        name: "TermsAndConditions",
+        hidden: true,
+        component: () =>
+            import(
+                /* webpackChunkName: "user" */ "@/views/TermsAndConditions.vue"
+            )
     },
     {
         path: routesPaths.notFound,
