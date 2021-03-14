@@ -88,7 +88,16 @@ export function makeServer() {
                 }
             });
             this.get(`${BASE_URI}/products`, () => products);
-            this.get(`${BASE_URI}/product`, () => products[0]);
+            this.get(`${BASE_URI}/product`, (schema, request) => {
+                const {id} = request.queryParams;
+                const product = products.find(product => product.id === id);
+                if (!product) {
+                    return {
+                        error: "invalid username and/or password"
+                    };
+                }
+                return product;
+            });
         }
     });
 }
