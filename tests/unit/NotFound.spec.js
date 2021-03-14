@@ -1,8 +1,8 @@
 import {shallowMount} from "@vue/test-utils";
 import NotFound from "@/views/NotFound.vue";
-describe("App.vue", () => {
-    let wrapper;
 
+describe("NotFound.vue", () => {
+    let wrapper;
     beforeEach(() => {
         wrapper = shallowMount(NotFound, {
             stubs: ["router-link"]

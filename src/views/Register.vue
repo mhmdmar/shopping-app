@@ -86,13 +86,12 @@
 <script>
     import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
+    import {mapGetters, mapMutations} from "vuex";
+    import {userMixin} from "@/mixin/user";
+
     export default {
         name: "Register",
-        beforeCreate() {
-            if (this.$store.getters.user !== null) {
-                this.$router.push(routesPaths.user);
-            }
-        },
+        mixins: [userMixin],
         data() {
             return {
                 username: "",
@@ -104,8 +103,8 @@
                 registrationAttempts: 0
             };
         },
-        mounted() {},
         computed: {
+            ...mapGetters(["user"]),
             validUser() {
                 return this.getValidateObject(() => {
                     if (this.username === "") {
@@ -136,6 +135,7 @@
             }
         },
         methods: {
+            ...mapMutations(["loginUser"]),
             isFormValid() {
                 return (
                     !this.validUser.errMsg &&
@@ -177,7 +177,7 @@
                         .then(response => {
                             const {error, user} = response;
                             if (user !== null && user !== undefined) {
-                                this.$store.commit("loginUser", response.user);
+                                this.loginUser(response.user);
                                 this.$router.push(routesPaths.user);
                             } else {
                                 this.registerErrMessage = error;

@@ -44,7 +44,7 @@ const users = [
         email: "mhmdmar@gmail.com",
         username: "mhmdmar",
         password: "123456",
-        profilePicture: "logo.png"
+        profilePicture: "/images/logo.png"
     },
     {
         email: "admin@",
