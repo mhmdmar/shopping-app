@@ -1,6 +1,7 @@
 <template>
     <div id="app">
         <topbar></topbar>
+        TEST
         <Spinner :is-loading="isLoading"></Spinner>
         <router-view />
     </div>
