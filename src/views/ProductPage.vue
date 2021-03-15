@@ -1,11 +1,12 @@
 <template>
     <div class="product-page-container">
         <Product
-            :title="title"
+            v-if="product !== null"
+            :title="product.title"
             :id="id"
-            :picture="picture"
-            :price="price"
-            :rating="rating"
+            :picture="product.picture"
+            :price="product.price"
+            :rating="product.rating"
         >
         </Product>
     </div>
@@ -14,24 +15,32 @@
 <script>
     import Product from "@/views/Product";
     import {productsService} from "@/services/productsService";
+    import {mapMutations} from "vuex";
     export default {
         name: "ProductPage",
         components: {Product},
         data() {
             return {
-                id: this.$route.params.id,
-                picture: "",
-                title: "",
-                price: 0,
-                rating: 0
+                product: null,
+                id: this.$route.params.id
             };
         },
-        async beforeMount() {
-            const curProduct = await productsService.getProduct(this.id);
-            this.picture = curProduct.picture;
-            this.title = curProduct.title;
-            this.price = curProduct.price;
-            this.rating = curProduct.rating;
+        methods: {
+            ...mapMutations(["setIsLoading"])
+        },
+        mounted() {
+            this.setIsLoading(true);
+            productsService
+                .getProduct(this.id)
+                .then(product => {
+                    this.product = product;
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+                .finally(() => {
+                    this.setIsLoading(false);
+                });
         }
     };
 </script>

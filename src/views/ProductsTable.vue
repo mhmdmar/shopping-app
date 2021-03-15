@@ -1,24 +1,26 @@
 <template>
     <div class="products-table-container">
-        <div
-            class="products-row"
-            v-for="(productsRow, i) in productsRows"
-            :key="i"
-        >
+        <div v-if="products !== null">
             <div
-                class="product-column"
-                v-for="product in productsRow"
-                :key="product.id"
+                class="products-row"
+                v-for="(productsRow, i) in productsRows"
+                :key="i"
             >
-                <router-link :to="'product/' + product.id">
-                    <Product
-                        :id="product.id"
-                        :picture="product.picture"
-                        :title="product.title"
-                        :price="product.price"
-                        :rating="product.rating"
-                    ></Product>
-                </router-link>
+                <div
+                    class="product-column"
+                    v-for="product in productsRow"
+                    :key="product.id"
+                >
+                    <router-link :to="'product/' + product.id">
+                        <Product
+                            :id="product.id"
+                            :picture="product.picture"
+                            :title="product.title"
+                            :price="product.price"
+                            :rating="product.rating"
+                        ></Product>
+                    </router-link>
+                </div>
             </div>
         </div>
     </div>
@@ -27,6 +29,7 @@
 <script>
     import Product from "@/views/Product";
     import {productsService} from "@/services/productsService.js";
+    import {mapMutations} from "vuex";
     export default {
         name: "ProductsTable",
         components: {
@@ -54,10 +57,14 @@
         data() {
             return {
                 productPerRow: 3,
-                products: []
+                products: null
             };
         },
+        methods: {
+            ...mapMutations(["setIsLoading"])
+        },
         mounted() {
+            this.setIsLoading(true);
             productsService
                 .getProducts()
                 .then(products => {
@@ -65,6 +72,9 @@
                 })
                 .catch(err => {
                     console.log(err);
+                })
+                .finally(() => {
+                    this.setIsLoading(false);
                 });
         }
     };
