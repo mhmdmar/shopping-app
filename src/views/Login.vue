@@ -70,7 +70,7 @@
             ...mapGetters(["user"])
         },
         methods: {
-            ...mapMutations(["loginUser", "logoutUser"]),
+            ...mapMutations(["loginUser", "logoutUser", "setIsLoading"]),
             validateForm() {
                 if (this.username === "") {
                     return "empty username";
@@ -83,6 +83,7 @@
                 this.loginAttempts++;
                 this.loginErrMsg = this.validateForm();
                 if (!this.loginErrMsg) {
+                    this.setIsLoading(true);
                     userService
                         .getAccount(this.username, this.password)
                         .then(response => {
@@ -98,6 +99,9 @@
                             this.loginErrMsg =
                                 "server error, please try again later";
                             console.log(err);
+                        })
+                        .finally(() => {
+                            this.setIsLoading(false);
                         });
                 }
             }
