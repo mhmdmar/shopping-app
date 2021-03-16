@@ -2,10 +2,10 @@ name: Continious Integration
 
 on:
   pull_request:
-    branches: [ main ]
-
+    branches:
+      - main
 jobs:
-  pull_request:
+  unit_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

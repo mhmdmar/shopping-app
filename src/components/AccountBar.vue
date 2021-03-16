@@ -28,24 +28,17 @@
 <script>
     import {mapGetters, mapMutations} from "vuex";
     import {routesPaths} from "@/router/routes";
-    import localStorage from "@/services/localStorage";
     import {utillyMixin} from "@/mixin/utilly.js";
     export default {
         name: "AccountBar",
         mixins: [utillyMixin],
-        mounted() {
-            const user = localStorage.getValue("user");
-            if (!this.isNil(user)) {
-                this.loginUser(user);
-            }
-        },
         data() {
             return {
                 loginPath: routesPaths.login
             };
         },
         methods: {
-            ...mapMutations(["loginUser", "logoutUser"]),
+            ...mapMutations(["logoutUser"]),
             logout() {
                 this.logoutUser();
                 if (this.$route.path !== routesPaths.home) {
@@ -56,7 +49,7 @@
         computed: {
             ...mapGetters(["user"]),
             username() {
-                return this.user.username || "";
+                return this.user.username;
             },
             userProfilePicture() {
                 return this.user.profilePicture || "images/img_avatar.png";

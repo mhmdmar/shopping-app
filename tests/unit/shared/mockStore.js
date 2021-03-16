@@ -3,7 +3,8 @@ export const mockStore = Object.freeze({
     actions: {},
     mutations: {
         loginUser: jest.fn(),
-        logoutUser: jest.fn()
+        logoutUser: jest.fn(),
+        isLoading: jest.fn()
     },
     getters: {
         user: jest.fn(() => null)
