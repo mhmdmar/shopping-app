@@ -57,14 +57,13 @@ export function makeServer() {
         routes() {
             this.get(`${BASE_URI}/users`, () => users);
             this.get(`${BASE_URI}/user`, (schema, request) => {
-                const {username, password} = request.queryParams;
+                const {email, password} = request.queryParams;
                 const user = users.find(
-                    user =>
-                        user.username === username && user.password === password
+                    user => user.email === email && user.password === password
                 );
                 if (!user) {
                     return {
-                        error: "invalid username and/or password"
+                        error: "invalid email and/or password"
                     };
                 }
                 return {
@@ -93,7 +92,7 @@ export function makeServer() {
                 const product = products.find(product => product.id === id);
                 if (!product) {
                     return {
-                        error: "invalid username and/or password"
+                        error: "product doesn't exists"
                     };
                 }
                 return product;

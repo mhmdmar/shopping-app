@@ -7,12 +7,12 @@
             v-if="isNil(user)"
         >
             <div class="col-12">
-                <label for="username" class="form-label"><b>Username</b></label>
+                <label for="email" class="form-label"><b>Email</b></label>
                 <input
                     type="text"
                     class="form-control"
-                    id="username"
-                    v-model="username"
+                    id="email"
+                    v-model="email"
                     required
                 />
             </div>
@@ -59,7 +59,7 @@
         mixins: [userMixin, utillyMixin],
         data() {
             return {
-                username: "",
+                email: "",
                 password: "",
                 loginAttempts: 0,
                 loginErrMsg: "",
@@ -72,8 +72,8 @@
         methods: {
             ...mapMutations(["loginUser", "logoutUser", "setIsLoading"]),
             validateForm() {
-                if (this.username === "") {
-                    return "empty username";
+                if (this.email === "") {
+                    return "empty email";
                 }
                 if (this.password === "") {
                     return "empty password";
@@ -85,7 +85,7 @@
                 if (!this.loginErrMsg) {
                     this.setIsLoading(true);
                     userService
-                        .getAccount(this.username, this.password)
+                        .getAccount(this.email, this.password)
                         .then(response => {
                             const {error, user} = response;
                             if (user !== null && user !== undefined) {

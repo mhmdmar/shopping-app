@@ -17,7 +17,7 @@ export const userService = {
     },
     async getAccount(username, password) {
         let res = await axios.get(
-            `${BASE_URI}/user?username=${username}&password=${password}`
+            `${BASE_URI}/user?email=${username}&password=${password}`
         );
         const {error, user} = res.data;
         let success = true;
@@ -30,7 +30,7 @@ export const userService = {
         return {
             success,
             user,
-            error: error || "invalid username/password"
+            error: error || "invalid email/password"
         };
     },
     async registerAccount(email, username, password) {
