@@ -18,15 +18,17 @@
             <div>
                 <span class="price">{{ price }}$</span>
             </div>
+            <ProductCart v-if="addToCartVisible"></ProductCart>
         </div>
     </div>
 </template>
 
 <script>
     import StarRating from "vue-star-rating";
+    import ProductCart from "@/components/ProductCart";
     export default {
         name: "Product",
-        components: {StarRating},
+        components: {StarRating, ProductCart},
         props: {
             id: {
                 type: String,
@@ -47,6 +49,10 @@
             rating: {
                 type: Number,
                 required: true
+            },
+            addToCartVisible: {
+                type: Boolean,
+                default: false
             }
         },
         data() {

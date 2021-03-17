@@ -91,10 +91,11 @@
     import {routesPaths} from "@/router/routes";
     import {mapGetters, mapMutations} from "vuex";
     import {userMixin} from "@/mixin/user";
+    import {routerUtil} from "@/mixin/routerUtil";
 
     export default {
         name: "Register",
-        mixins: [userMixin],
+        mixins: [userMixin, routerUtil],
         data() {
             return {
                 username: "",
@@ -182,7 +183,7 @@
                             const {error, user} = response;
                             if (user !== null && user !== undefined) {
                                 this.loginUser(response.user);
-                                this.$router.push(routesPaths.user);
+                                this.navigateToRoute(routesPaths.home);
                             } else {
                                 this.registerErrMessage = error;
                             }

@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <SvgSprite />
         <topbar></topbar>
         <Spinner :is-loading="isLoading"></Spinner>
         <router-view />
@@ -7,16 +8,18 @@
 </template>
 
 <script>
+    import SvgSprite from "@/components/SvgSprite.vue";
     import Topbar from "@/components/Topbar.vue";
     import Spinner from "@/components/Spinner";
     import {mapGetters, mapMutations} from "vuex";
-    import localStorage from "@/services/localStorage";
-    import {utillyMixin} from "@/mixin/utilly";
+    import localStorage from "@/services/localStorage.js";
+    import {utillyMixin} from "@/mixin/utilly.js";
     export default {
         name: "App",
         components: {
             Topbar,
-            Spinner
+            Spinner,
+            SvgSprite
         },
         mixins: [utillyMixin],
         mounted() {

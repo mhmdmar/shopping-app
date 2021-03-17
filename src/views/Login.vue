@@ -53,10 +53,11 @@
     import {mapGetters, mapMutations} from "vuex";
     import {userMixin} from "@/mixin/user.js";
     import {utillyMixin} from "@/mixin/utilly.js";
+    import {routerUtil} from "@/mixin/routerUtil";
 
     export default {
         name: "Login",
-        mixins: [userMixin, utillyMixin],
+        mixins: [userMixin, utillyMixin, routerUtil],
         data() {
             return {
                 email: "",
@@ -90,7 +91,7 @@
                             const {error, user} = response;
                             if (user !== null && user !== undefined) {
                                 this.loginUser(user);
-                                this.$router.push(routesPaths.user);
+                                this.navigateToRoute(routesPaths.home);
                             } else {
                                 this.loginErrMsg = error;
                             }
