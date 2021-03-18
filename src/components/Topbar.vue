@@ -1,17 +1,32 @@
 <template>
     <div>
-        <div class="topnav">
-            <template v-for="(route, index) in routes">
-                <router-link
-                    class="topnav-item route-item"
-                    v-if="!route.hidden"
-                    :key="index"
-                    :to="route.path"
-                    >{{ route.name }}</router-link
-                >
-            </template>
-            <AccountBar class="topnav-item account-bar"></AccountBar>
-        </div>
+        <b-navbar toggleable="lg" type="dark" variant="dark">
+            <b-navbar-brand href="#">Shopping App</b-navbar-brand>
+            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+            <b-collapse id="nav-collapse" is-nav>
+                <b-navbar-nav>
+                    <b-nav-item
+                        href="#"
+                        v-for="(route, index) in routes"
+                        :key="index"
+                    >
+                        <router-link
+                            class="route-item"
+                            v-if="!route.hidden"
+                            :key="index"
+                            :to="route.path"
+                            >{{ route.name }}</router-link
+                        >
+                    </b-nav-item>
+                </b-navbar-nav>
+
+                <!-- Right aligned nav items -->
+                <b-navbar-nav class="ml-auto">
+                    <AccountBar class="account-bar"></AccountBar>
+                </b-navbar-nav>
+            </b-collapse>
+        </b-navbar>
     </div>
 </template>
 
@@ -33,30 +48,13 @@
 </script>
 
 <style scoped lang="scss">
-    .topnav {
-        display: flex;
-        align-items: center;
-        background-color: #333;
-        height: 50px;
-        & > .topnav-item {
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-        & > .route-item {
-            &:active {
-                background-color: #4caf50;
-                color: white;
-            }
-            &:hover {
-                background-color: #ddd;
-                color: black;
-            }
-        }
-    }
     .account-bar {
-        margin-left: auto;
+        color: #ffffff;
+    }
+    .route-item {
+        color: #ffffff;
+    }
+    .active {
+        color: green;
     }
 </style>

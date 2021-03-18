@@ -1,15 +1,18 @@
 <template>
     <div>
         <div class="account-container" v-if="!isNil(user)">
-            <img :src="userProfilePicture" :alt="username" />
-            <span class="username">{{ username }}</span>
-            <b-dropdown
-                id="dropdown-right"
-                right
-                text=""
-                variant="primary"
-                class="s-1"
-            >
+            <div class="bar-container">
+                <b-img
+                    :src="userProfilePicture"
+                    thumbnail
+                    fluid
+                    :alt="username"
+                />
+                <div class="username">
+                    <span class="ellipses">{{ username }}</span>
+                </div>
+            </div>
+            <b-dropdown id="dropdown-right" right variant="primary" class="s-1">
                 <b-dropdown-item href="#">Placeholder</b-dropdown-item>
                 <b-dropdown-item href="#">Placeholder</b-dropdown-item>
                 <b-dropdown-item href="#">Placeholder</b-dropdown-item>
@@ -70,15 +73,21 @@
         cursor: pointer;
         display: flex;
         align-items: center;
-        justify-content: space-evenly;
+    }
+    .bar-container {
+        margin-right: 5px;
+        display: flex;
+        cursor: default;
         & > img {
-            height: 28px;
-            width: 28px;
-            border-radius: 50%;
+            width: 40px;
+            border-radius: 20%;
         }
         & > .username {
             padding: 0 10px;
             user-select: none;
+            max-width: 120px;
+            display: inline-flex;
+            align-items: center;
         }
     }
 </style>
