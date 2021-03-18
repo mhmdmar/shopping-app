@@ -14,6 +14,9 @@
                 <b-dropdown-item href="#">Placeholder</b-dropdown-item>
                 <b-dropdown-item href="#">Placeholder</b-dropdown-item>
                 <div class="dropdown-divider"></div>
+                <b-dropdown-item href="#" @click="navigateToRoute(userPath)"
+                    >Settings</b-dropdown-item
+                >
                 <b-dropdown-item href="#" @click="logout"
                     >Logout</b-dropdown-item
                 >
@@ -29,21 +32,22 @@
     import {mapGetters, mapMutations} from "vuex";
     import {routesPaths} from "@/router/routes";
     import {utillyMixin} from "@/mixin/utilly.js";
+    import {BASE_URI} from "@/services/services";
+    import {routerUtil} from "@/mixin/routerUtil";
     export default {
         name: "AccountBar",
-        mixins: [utillyMixin],
+        mixins: [utillyMixin, routerUtil],
         data() {
             return {
-                loginPath: routesPaths.login
+                loginPath: routesPaths.login,
+                userPath: routesPaths.user
             };
         },
         methods: {
             ...mapMutations(["logoutUser"]),
             logout() {
                 this.logoutUser();
-                if (this.$route.path !== routesPaths.home) {
-                    this.$router.push(routesPaths.home);
-                }
+                this.navigateToRoute(routesPaths.home);
             }
         },
         computed: {
@@ -52,7 +56,10 @@
                 return this.user.username;
             },
             userProfilePicture() {
-                return this.user.profilePicture || "images/img_avatar.png";
+                return (
+                    this.user.profilePicture ||
+                    `${BASE_URI}/images/img_avatar.png`
+                );
             }
         }
     };

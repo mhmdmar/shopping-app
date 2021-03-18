@@ -7,6 +7,7 @@
             :picture="product.picture"
             :price="product.price"
             :rating="product.rating"
+            :addToCartVisible="true"
         >
         </Product>
     </div>

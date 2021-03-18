@@ -1,31 +1,31 @@
 import {createServer} from "miragejs";
-import {BASE_URI} from "@/services/services.js";
+import {API_BASE_URI, BASE_URI} from "@/services/services.js";
 
 const products = [
     {
         id: "1",
-        picture: "/images/product1.jpg",
+        picture: `${BASE_URI}/images/product1.jpg`,
         title: "Screen",
         price: 1300,
         rating: 5
     },
     {
         id: "2",
-        picture: "/images/product2.jpg",
+        picture: `${BASE_URI}/images/product2.jpg`,
         title: "Headset",
         price: 110,
         rating: 4
     },
     {
         id: "3",
-        picture: "/images/product3.jpg",
+        picture: `${BASE_URI}/images/product3.jpg`,
         title: "Shampoo",
         price: 15,
         rating: 3
     },
     {
         id: "4",
-        picture: "/images/product1.jpg",
+        picture: `${BASE_URI}/images/product1.jpg`,
         title: "Screen2",
         price: 1200,
         rating: 2
@@ -44,10 +44,10 @@ const users = [
         email: "mhmdmar@gmail.com",
         username: "mhmdmar",
         password: "123456",
-        profilePicture: "/images/logo.png"
+        profilePicture: `${BASE_URI}/images/logo.jpg`
     },
     {
-        email: "admin@",
+        email: "admin",
         username: "admin",
         password: "admin"
     }
@@ -55,23 +55,22 @@ const users = [
 export function makeServer() {
     return createServer({
         routes() {
-            this.get(`${BASE_URI}/users`, () => users);
-            this.get(`${BASE_URI}/user`, (schema, request) => {
-                const {username, password} = request.queryParams;
+            this.get(`${API_BASE_URI}/users`, () => users);
+            this.get(`${API_BASE_URI}/user`, (schema, request) => {
+                const {email, password} = request.queryParams;
                 const user = users.find(
-                    user =>
-                        user.username === username && user.password === password
+                    user => user.email === email && user.password === password
                 );
                 if (!user) {
                     return {
-                        error: "invalid username and/or password"
+                        error: "invalid email and/or password"
                     };
                 }
                 return {
                     user
                 };
             });
-            this.post(`${BASE_URI}/register`, (schema, request) => {
+            this.post(`${API_BASE_URI}/register`, (schema, request) => {
                 let newUser = JSON.parse(request.requestBody);
                 const isEmailTaken =
                     users.find(user => user.email === newUser.email) !==
@@ -87,13 +86,13 @@ export function makeServer() {
                     };
                 }
             });
-            this.get(`${BASE_URI}/products`, () => products);
-            this.get(`${BASE_URI}/product`, (schema, request) => {
+            this.get(`${API_BASE_URI}/products`, () => products);
+            this.get(`${API_BASE_URI}/product`, (schema, request) => {
                 const {id} = request.queryParams;
                 const product = products.find(product => product.id === id);
                 if (!product) {
                     return {
-                        error: "invalid username and/or password"
+                        error: "product doesn't exists"
                     };
                 }
                 return product;
