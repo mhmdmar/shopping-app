@@ -37,4 +37,10 @@
     };
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+    .ellipses {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
