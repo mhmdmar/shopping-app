@@ -1,6 +1,10 @@
 <template>
-    <div>
+    <div class="account-bar-container">
         <div class="account-container" v-if="!isNil(user)">
+            <CartHeader
+                class="cart-header border-right"
+                :cartSize="cartSize"
+            ></CartHeader>
             <div class="bar-container">
                 <b-img
                     :src="userProfilePicture"
@@ -37,8 +41,10 @@
     import {utillyMixin} from "@/mixin/utilly.js";
     import {BASE_URI} from "@/services/services";
     import {routerUtil} from "@/mixin/routerUtil";
+    import CartHeader from "@/components/CartHeader";
     export default {
         name: "AccountBar",
+        components: {CartHeader},
         mixins: [utillyMixin, routerUtil],
         data() {
             return {
@@ -54,7 +60,7 @@
             }
         },
         computed: {
-            ...mapGetters(["user"]),
+            ...mapGetters(["user", "cartSize"]),
             username() {
                 return this.user.username;
             },
@@ -63,6 +69,11 @@
                     this.user.profilePicture ||
                     `${BASE_URI}/images/img_avatar.png`
                 );
+            }
+        },
+        watch: {
+            cartSize() {
+                console.log(this.cartSize);
             }
         }
     };
@@ -89,5 +100,13 @@
             display: inline-flex;
             align-items: center;
         }
+    }
+    .account-bar-container {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    .cart-header {
+        margin-right: 10px;
     }
 </style>

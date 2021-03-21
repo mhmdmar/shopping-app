@@ -35,10 +35,7 @@
         },
         methods: {
             addToCart() {
-                if (this.selectedQuantity <= 1) {
-                    this.selectedQuantity = 1;
-                }
-                console.log(this.selectedQuantity);
+                this.$emit("addToCartClicked", this.selectedQuantity);
             }
         }
     };
