@@ -8,6 +8,7 @@
             :price="product.price"
             :rating="product.rating"
             :addToCartVisible="true"
+            @productAdded="addProductToCart"
         >
         </Product>
     </div>
@@ -16,7 +17,9 @@
 <script>
     import Product from "@/views/Product";
     import {productsService} from "@/services/productsService";
-    import {mapMutations} from "vuex";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {cartService} from "@/services/cartService";
+    import {isNil} from "utilly";
     export default {
         name: "ProductPage",
         components: {Product},
@@ -27,7 +30,38 @@
             };
         },
         methods: {
-            ...mapMutations(["setIsLoading"])
+            ...mapMutations(["setIsLoading"]),
+            ...mapActions(["addItemToCart"]),
+            addProductToCart(id, quantity) {
+                if (quantity < -1) {
+                    quantity = 1;
+                }
+
+                if (isNil(this.user)) {
+                    return;
+                }
+
+                this.setIsLoading(true);
+                cartService
+                    .addToCart(
+                        this.user.email,
+                        this.user.password,
+                        id,
+                        quantity
+                    )
+                    .then((/* cart */) => {
+                        this.addItemToCart({
+                            id,
+                            quantity
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false);
+                    });
+            }
         },
         mounted() {
             this.setIsLoading(true);
@@ -42,6 +76,9 @@
                 .finally(() => {
                     this.setIsLoading(false);
                 });
+        },
+        computed: {
+            ...mapGetters(["user"])
         }
     };
 </script>

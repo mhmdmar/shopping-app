@@ -191,7 +191,7 @@
                         .catch(err => {
                             this.registerErrMessage =
                                 "server error, please try again later";
-                            console.log(err);
+                            console.error(err);
                         });
                 }
             }

@@ -35,16 +35,13 @@
         },
         methods: {
             addToCart() {
-                if (this.selectedQuantity <= 1) {
-                    this.selectedQuantity = 1;
-                }
-                console.log(this.selectedQuantity);
+                this.$emit("addToCartClicked", this.selectedQuantity);
             }
         }
     };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .product-cart-container {
     }
     .btn {
@@ -54,6 +51,11 @@
         padding: 12px 16px;
         font-size: 16px;
         cursor: pointer;
+    }
+    .cart {
+        &:hover {
+            background-color: inherit;
+        }
     }
     .cart-controller .btn {
         display: block;

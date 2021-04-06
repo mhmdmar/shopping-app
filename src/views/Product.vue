@@ -18,7 +18,12 @@
             <div>
                 <span class="price">{{ price }}$</span>
             </div>
-            <ProductCart v-if="addToCartVisible"></ProductCart>
+            <ProductCart
+                v-if="addToCartVisible"
+                @addToCartClicked="
+                    quantity => $emit('productAdded', id, quantity)
+                "
+            ></ProductCart>
         </div>
     </div>
 </template>
@@ -26,6 +31,7 @@
 <script>
     import StarRating from "vue-star-rating";
     import ProductCart from "@/components/ProductCart";
+    import {mapActions} from "vuex";
     export default {
         name: "Product",
         components: {StarRating, ProductCart},
@@ -58,7 +64,9 @@
         data() {
             return {};
         },
-        methods: {}
+        methods: {
+            ...mapActions(["addItemToCart"])
+        }
     };
 </script>
 
