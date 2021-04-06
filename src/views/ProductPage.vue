@@ -33,9 +33,14 @@
             ...mapMutations(["setIsLoading"]),
             ...mapActions(["addItemToCart"]),
             addProductToCart(id, quantity) {
+                if (quantity < -1) {
+                    quantity = 1;
+                }
+
                 if (isNil(this.user)) {
                     return;
                 }
+
                 this.setIsLoading(true);
                 cartService
                     .addToCart(

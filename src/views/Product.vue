@@ -20,7 +20,9 @@
             </div>
             <ProductCart
                 v-if="addToCartVisible"
-                @addToCartClicked="addToCart"
+                @addToCartClicked="
+                    quantity => $emit('productAdded', id, quantity)
+                "
             ></ProductCart>
         </div>
     </div>
@@ -63,13 +65,7 @@
             return {};
         },
         methods: {
-            ...mapActions(["addItemToCart"]),
-            addToCart(selectedQuantity) {
-                if (selectedQuantity <= 1) {
-                    selectedQuantity = 1;
-                }
-                this.$emit("productAdded", this.id, selectedQuantity);
-            }
+            ...mapActions(["addItemToCart"])
         }
     };
 </script>

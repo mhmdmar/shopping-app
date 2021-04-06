@@ -11,14 +11,11 @@ class Cart {
         }
     }
     addItem(id, quantity = 1) {
-        if (!isUndefined(this.items[id])) {
+        if (isUndefined(this.items[id])) {
             this.items[id] = 0;
         }
         if (typeof quantity === "string") {
             quantity = Number(quantity);
-        }
-        if (isUndefined(this.items[id])) {
-            this.items[id] = 0;
         }
         this.items[id] += quantity;
     }

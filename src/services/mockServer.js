@@ -46,7 +46,6 @@ const users = [
         password: "123456",
         profilePicture: `${BASE_URI}/images/logo.png`,
         cart: {
-            quantity: 0,
             items: [{id: "1", quantity: 5}]
         }
     },
@@ -55,7 +54,6 @@ const users = [
         username: "admin",
         password: "admin",
         cart: {
-            quantity: 0,
             items: []
         }
     }
