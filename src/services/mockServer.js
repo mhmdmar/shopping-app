@@ -1,6 +1,6 @@
 import {createServer} from "miragejs";
 import {API_BASE_URI, BASE_URI} from "@/services/services.js";
-
+import {isNumber, isUndefined} from "utilly";
 const products = [
     {
         id: "1",
@@ -44,14 +44,23 @@ const users = [
         email: "mhmdmar@gmail.com",
         username: "mhmdmar",
         password: "123456",
-        profilePicture: `${BASE_URI}/images/logo.jpg`
+        profilePicture: `${BASE_URI}/images/logo.png`,
+        cart: {
+            quantity: 0,
+            items: [{id: "1", quantity: 5}]
+        }
     },
     {
         email: "admin",
         username: "admin",
-        password: "admin"
+        password: "admin",
+        cart: {
+            quantity: 0,
+            items: []
+        }
     }
 ];
+
 export function makeServer() {
     return createServer({
         routes() {
@@ -96,6 +105,66 @@ export function makeServer() {
                     };
                 }
                 return product;
+            });
+            this.get(`${API_BASE_URI}/cart`, (schema, request) => {
+                const {email, password} = request.queryParams;
+                const user = users.find(
+                    user => user.email === email && user.password === password
+                );
+                if (!user) {
+                    return {
+                        error: "invalid email and/or password"
+                    };
+                }
+                return user.cart;
+            });
+            this.post(`${API_BASE_URI}/cart`, (schema, request) => {
+                let {email, password, productId, quantity} = JSON.parse(
+                    request.requestBody
+                );
+
+                quantity = Number(quantity);
+                if (!isNumber(quantity)) {
+                    return {
+                        error: "quantity must be a valid number"
+                    };
+                }
+
+                if (isUndefined(email) || isUndefined(password)) {
+                    return {
+                        error: "please provide an email/password"
+                    };
+                }
+
+                const user = users.find(
+                    user => user.email === email && user.password === password
+                );
+                if (!user) {
+                    return {
+                        error: "invalid email and/or password"
+                    };
+                }
+                if (user.cart === undefined) {
+                    user.cart = {
+                        quantity: 0,
+                        items: []
+                    };
+                }
+                const productIndex = user.cart.items.findIndex(
+                    item => item.id === productId
+                );
+
+                if (productIndex === -1) {
+                    user.cart.items.push({
+                        id: productId,
+                        quantity
+                    });
+                } else {
+                    user.cart.items[productIndex].quantity += quantity;
+                }
+                return {
+                    message: "Added item to cart successfully"
+                };
             });
         }
     });

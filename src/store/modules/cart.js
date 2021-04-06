@@ -1,18 +1,29 @@
+import {isUndefined} from "utilly";
 class Cart {
     constructor() {
         this.items = {};
     }
+    initItems(items) {
+        this.items = {};
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            this.addItem(item.id, item.quantity);
+        }
+    }
     addItem(id, quantity = 1) {
-        if (this.items[id] === undefined) {
+        if (!isUndefined(this.items[id])) {
             this.items[id] = 0;
         }
         if (typeof quantity === "string") {
             quantity = Number(quantity);
         }
+        if (isUndefined(this.items[id])) {
+            this.items[id] = 0;
+        }
         this.items[id] += quantity;
     }
     removeItem(id, quantity = 1) {
-        if (this.items[id] !== undefined) {
+        if (!isUndefined(this.items[id])) {
             this.items[id] -= quantity;
             if (this.items[id] <= 0) {
                 delete this.items[id];
@@ -55,21 +66,34 @@ export default {
         },
         updateCartSize(state, size) {
             state._size = size;
+        },
+        initCartItems(state, items) {
+            state._cart.initItems(items);
         }
     },
     actions: {
         addItemToCart({state, commit}, payload) {
             const {id, quantity} = payload;
-            if (id === undefined) {
+            if (isUndefined(id)) {
                 throw new Error("Cannot add unknown product");
             }
             commit("addItem", {id, quantity});
+            commit("updateCartSize", state._cart.getSize());
+        },
+        setCartItems({state, commit}, {items}) {
+            if (isUndefined(items)) {
+                return;
+            }
+            commit("initCartItems", items);
             commit("updateCartSize", state._cart.getSize());
         }
     },
     getters: {
         cartSize(state) {
             return state._size;
+        },
+        items(state) {
+            return state._cart;
         }
     }
 };

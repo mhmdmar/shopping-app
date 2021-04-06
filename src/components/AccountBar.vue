@@ -53,9 +53,9 @@
             };
         },
         methods: {
-            ...mapMutations(["logoutUser"]),
+            ...mapMutations(["removeUserSession"]),
             logout() {
-                this.logoutUser();
+                this.removeUserSession();
                 this.navigateToRoute(routesPaths.home);
             }
         },
@@ -69,11 +69,6 @@
                     this.user.profilePicture ||
                     `${BASE_URI}/images/img_avatar.png`
                 );
-            }
-        },
-        watch: {
-            cartSize() {
-                console.log(this.cartSize);
             }
         }
     };

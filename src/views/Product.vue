@@ -68,10 +68,7 @@
                 if (selectedQuantity <= 1) {
                     selectedQuantity = 1;
                 }
-                this.addItemToCart({
-                    id: this.id,
-                    quantity: selectedQuantity
-                });
+                this.$emit("productAdded", this.id, selectedQuantity);
             }
         }
     };

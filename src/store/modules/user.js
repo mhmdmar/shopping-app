@@ -4,11 +4,11 @@ export default {
         _user: null
     },
     mutations: {
-        loginUser(state, user) {
+        setUserSession(state, user) {
             state._user = user;
             localStorage.setValue("user", user);
         },
-        logoutUser(state) {
+        removeUserSession(state) {
             state._user = null;
             localStorage.removeKey("user");
         }

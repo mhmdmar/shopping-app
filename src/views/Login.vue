@@ -48,7 +48,6 @@
 </template>
 
 <script>
-    import {userService} from "@/services/userService.js";
     import {routesPaths} from "@/router/routes.js";
     import {mapGetters, mapMutations} from "vuex";
     import {userMixin} from "@/mixin/user.js";
@@ -71,7 +70,7 @@
             ...mapGetters(["user"])
         },
         methods: {
-            ...mapMutations(["loginUser", "logoutUser", "setIsLoading"]),
+            ...mapMutations(["setIsLoading"]),
             validateForm() {
                 if (this.email === "") {
                     return "empty email";
@@ -84,26 +83,9 @@
                 this.loginAttempts++;
                 this.loginErrMsg = this.validateForm();
                 if (!this.loginErrMsg) {
-                    this.setIsLoading(true);
-                    userService
-                        .getAccount(this.email, this.password)
-                        .then(response => {
-                            const {error, user} = response;
-                            if (user !== null && user !== undefined) {
-                                this.loginUser(user);
-                                this.navigateToRoute(routesPaths.home);
-                            } else {
-                                this.loginErrMsg = error;
-                            }
-                        })
-                        .catch(err => {
-                            this.loginErrMsg =
-                                "server error, please try again later";
-                            console.log(err);
-                        })
-                        .finally(() => {
-                            this.setIsLoading(false);
-                        });
+                    this.loginUser(this.email, this.password, () => {
+                        this.navigateToRoute(routesPaths.home);
+                    });
                 }
             }
         }
