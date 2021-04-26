@@ -83,8 +83,12 @@
                 this.loginAttempts++;
                 this.loginErrMsg = this.validateForm();
                 if (!this.loginErrMsg) {
-                    this.loginUser(this.email, this.password, () => {
-                        this.navigateToRoute(routesPaths.home);
+                    this.loginUser(this.email, this.password, err => {
+                        if (err) {
+                            this.loginErrMsg = err;
+                        } else {
+                            this.navigateToRoute(routesPaths.home);
+                        }
                     });
                 }
             }

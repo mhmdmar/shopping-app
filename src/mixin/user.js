@@ -23,6 +23,7 @@ export const userMixin = {
                         cb?.();
                     } else if (!isNil(error)) {
                         console.error(error);
+                        cb?.(error);
                     }
                 })
                 .catch(err => {
