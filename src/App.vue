@@ -12,7 +12,6 @@
     import Topbar from "@/components/Topbar.vue";
     import Spinner from "@/components/Spinner";
     import {mapGetters} from "vuex";
-    import localStorage from "@/services/localStorage.js";
     import {utillyMixin} from "@/mixin/utilly.js";
     import {userMixin} from "@/mixin/user";
 
@@ -24,12 +23,6 @@
             SvgSprite
         },
         mixins: [utillyMixin, userMixin],
-        mounted() {
-            const user = localStorage.getValue("user");
-            if (!this.isNil(user)) {
-                this.loginUser(user.email, user.password);
-            }
-        },
         computed: {
             ...mapGetters(["isLoading"])
         }

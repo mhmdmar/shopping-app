@@ -6,6 +6,7 @@ export const routesPaths = {
     login: "/login",
     register: "/register",
     user: "/user",
+    cartRoom: "/cartRoom",
     product: "/product/:id",
     termsAndCondition: "/termsAndCondition",
     notFound: "/404"
@@ -28,38 +29,56 @@ export const routes = [
     {
         path: routesPaths.login,
         name: "Login",
-        hidden: true,
+        meta: {
+            hidden: true
+        },
         component: () =>
             import(/* webpackChunkName: "login" */ "@/views/Login.vue")
     },
     {
         path: routesPaths.register,
         name: "Register",
-        hidden: true,
+        meta: {
+            hidden: true
+        },
         component: () =>
             import(/* webpackChunkName: "login" */ "@/views/Register.vue")
     },
     {
         path: routesPaths.user,
         name: "User",
-        hidden: true,
-        component: () =>
-            import(/* webpackChunkName: "user" */ "@/views/User.vue"),
         meta: {
-            requiredAuth: true
-        }
+            requiredAuth: true,
+            hidden: true
+        },
+        component: () =>
+            import(/* webpackChunkName: "user" */ "@/views/User.vue")
     },
     {
         path: routesPaths.product,
         name: "Product",
-        hidden: true,
+        meta: {
+            hidden: true
+        },
         component: () =>
             import(/* webpackChunkName: "user" */ "@/views/ProductPage.vue")
     },
     {
+        path: routesPaths.cartRoom,
+        name: "CartRoom",
+        meta: {
+            requiredAuth: true,
+            hidden: true
+        },
+        component: () =>
+            import(/* webpackChunkName: "user" */ "@/views/CartRoom.vue")
+    },
+    {
         path: routesPaths.termsAndCondition,
         name: "TermsAndConditions",
-        hidden: true,
+        meta: {
+            hidden: true
+        },
         component: () =>
             import(
                 /* webpackChunkName: "user" */ "@/views/TermsAndConditions.vue"
@@ -69,7 +88,9 @@ export const routes = [
         path: routesPaths.notFound,
         name: "NotFound",
         alias: "*",
-        hidden: true,
+        meta: {
+            hidden: true
+        },
         component: () =>
             import(/* webpackChunkName: "notFound" */ "@/views/NotFound.vue")
     }
