@@ -8,12 +8,11 @@
                 <b-navbar-nav>
                     <b-nav-item
                         href="#"
-                        v-for="(route, index) in routes"
+                        v-for="(route, index) in visibleRoutes"
                         :key="index"
                     >
                         <router-link
                             class="route-item"
-                            v-if="!route.hidden"
                             :key="index"
                             :to="route.path"
                             >{{ route.name }}</router-link
@@ -38,7 +37,11 @@
         components: {
             AccountBar
         },
-        computed: {},
+        computed: {
+            visibleRoutes() {
+                return this.routes.filter(route => route.meta?.hidden !== true);
+            }
+        },
         data() {
             return {
                 routes

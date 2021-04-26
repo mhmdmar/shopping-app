@@ -87,9 +87,10 @@
 </template>
 
 <script>
+    import {isNil, isUndefined} from "utilly";
     import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
-    import {mapGetters, mapMutations} from "vuex";
+    import {mapGetters} from "vuex";
     import {userMixin} from "@/mixin/user";
     import {routerUtil} from "@/mixin/routerUtil";
 
@@ -140,7 +141,6 @@
             }
         },
         methods: {
-            ...mapMutations(["loginUser"]),
             isFormValid() {
                 return (
                     !this.validUser.errMsg &&
@@ -181,8 +181,8 @@
                         )
                         .then(response => {
                             const {error, user} = response;
-                            if (user !== null && user !== undefined) {
-                                this.loginUser(response.user);
+                            if (!isUndefined(user) && !isNil(user)) {
+                                this.$store.commit("setUserSession", user);
                                 this.navigateToRoute(routesPaths.home);
                             } else {
                                 this.registerErrMessage = error;

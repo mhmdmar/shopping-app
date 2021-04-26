@@ -13,11 +13,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const isLoggedIn = store.getters.user !== null;
-    let target;
-    if (to.meta.requiredAuth && !isLoggedIn) {
-        target = routesPaths.login;
+    if (to.meta.requiredAuth && !store.getters.isLoggedIn) {
+        next({path: routesPaths.login, query: {redirect: to.fullPath}});
+    } else {
+        next();
     }
-    next(target);
 });
 export default router;

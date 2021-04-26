@@ -80,6 +80,7 @@
                 }
             },
             login() {
+                const {redirect} = this.$route.query;
                 this.loginAttempts++;
                 this.loginErrMsg = this.validateForm();
                 if (!this.loginErrMsg) {
@@ -87,7 +88,7 @@
                         if (err) {
                             this.loginErrMsg = err;
                         } else {
-                            this.navigateToRoute(routesPaths.home);
+                            this.navigateToRoute(redirect || routesPaths.home);
                         }
                     });
                 }

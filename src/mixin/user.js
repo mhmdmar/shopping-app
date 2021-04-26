@@ -19,7 +19,6 @@ export const userMixin = {
                     const {error, user} = response;
                     if (!isNil(user)) {
                         this.$store.commit("setUserSession", user);
-                        this.$store.dispatch("setCartItems", user.cart);
                         cb?.();
                     } else if (!isNil(error)) {
                         console.error(error);
