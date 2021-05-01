@@ -8,6 +8,7 @@
                     :title="item.title"
                     :quantity="item.quantity"
                     :selected="item.selected"
+                    :id="item.id"
                     @itemSelectionChange="
                         isSelected =>
                             $emit('itemSelectionChange', item, isSelected)

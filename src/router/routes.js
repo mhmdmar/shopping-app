@@ -7,7 +7,7 @@ export const routesPaths = {
     register: "/register",
     user: "/user",
     cartRoom: "/cartRoom",
-    product: "/product/:id",
+    product: "/product",
     termsAndCondition: "/termsAndCondition",
     notFound: "/404"
 };
@@ -55,7 +55,7 @@ export const routes = [
             import(/* webpackChunkName: "user" */ "@/views/User.vue")
     },
     {
-        path: routesPaths.product,
+        path: routesPaths.product + "/:id",
         name: "Product",
         meta: {
             hidden: true

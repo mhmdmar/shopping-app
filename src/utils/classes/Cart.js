@@ -59,6 +59,9 @@ export default class Cart {
         });
     }
 
+    getItemQuantityById(id) {
+        return this.findItemById(id)?.quantity || null;
+    }
     getSize() {
         let count = 0;
         this._loopItems(item => {
