@@ -7,7 +7,7 @@ import {BootstrapVue, IconsPlugin} from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
-import {makeServer} from "@/./services/mockServer";
+import {makeServer} from "@/./services/mock/mockServer";
 
 Vue.config.productionTip = false;
 

@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const userService = {
     async getAccounts() {
-        let res = await axios.get(BASE_URI + "/users");
+        let res = await axios.get(`${API_BASE_URI}/users`);
         const {error, users} = res.data;
         let success = true;
         if (res.status !== 200) {

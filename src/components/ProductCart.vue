@@ -10,7 +10,7 @@
                 aria-label="Small"
                 value="1"
                 min="1"
-                v-model="selectedQuantity"
+                v-model.number="selectedQuantity"
                 aria-describedby="quantity"
             />
         </div>

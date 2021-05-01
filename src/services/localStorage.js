@@ -31,13 +31,22 @@ class LocalStorageService {
     removeKey(key) {
         delete this.storage[key];
     }
+    toString() {
+        let data = "";
+        try {
+            data = JSON.stringify(this.storage);
+        } catch (err) {
+            console.error(data);
+        }
+        return data;
+    }
     saveStorage() {
-        localStorage[this.storageKey] = JSON.stringify(this.storage);
+        localStorage[this.storageKey] = this.toString();
     }
 }
 
-const storage = new LocalStorageService();
-export default storage;
+const appStorage = new LocalStorageService();
+export default appStorage;
 window.onbeforeunload = function() {
-    storage.saveStorage();
+    appStorage.saveStorage();
 };
