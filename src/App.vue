@@ -30,9 +30,8 @@
 </script>
 
 <style lang="scss">
+    @import "src/styles/ellipsis";
     .ellipses {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
     }
 </style>

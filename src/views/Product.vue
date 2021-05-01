@@ -31,7 +31,6 @@
 <script>
     import StarRating from "vue-star-rating";
     import ProductCart from "@/components/ProductCart";
-    import {mapActions} from "vuex";
     export default {
         name: "Product",
         components: {StarRating, ProductCart},
@@ -63,14 +62,12 @@
         },
         data() {
             return {};
-        },
-        methods: {
-            ...mapActions(["addItemToCart"])
         }
     };
 </script>
 
 <style scoped lang="scss">
+    @import "src/styles/ellipsis";
     .product-container {
         width: 100%;
         height: 100%;
@@ -93,9 +90,7 @@
         width: 100%;
     }
     .product-title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
         text-align: center;
         width: 100%;
     }

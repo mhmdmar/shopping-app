@@ -7,7 +7,7 @@
             :picture="product.picture"
             :price="product.price"
             :rating="product.rating"
-            :addToCartVisible="true"
+            :addToCartVisible="isLoggedIn"
             @productAdded="addProductToCart"
         >
         </Product>
@@ -33,12 +33,12 @@
             ...mapMutations(["setIsLoading"]),
             ...mapActions(["addItemToCart"]),
             addProductToCart(id, quantity) {
-                if (quantity < -1) {
-                    quantity = 1;
-                }
-
                 if (isNil(this.user)) {
                     return;
+                }
+
+                if (quantity < -1) {
+                    quantity = 1;
                 }
 
                 this.setIsLoading(true);
@@ -78,7 +78,7 @@
                 });
         },
         computed: {
-            ...mapGetters(["user"])
+            ...mapGetters(["user", "isLoggedIn"])
         }
     };
 </script>
