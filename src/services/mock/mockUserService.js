@@ -1,5 +1,6 @@
 import {API_BASE_URI} from "@/services/services";
 import {users} from "@/services/mock/mockData";
+import {BASE_URI} from "../services";
 export default function userRoutes() {
     this.get(`${API_BASE_URI}/users`, () => {
         return {
@@ -29,6 +30,8 @@ export default function userRoutes() {
                 error: "email already exists"
             };
         } else {
+            newUser.profilePicture = `${BASE_URI}/images/img_avatar.png`;
+            newUser.registrationDate = Date.now();
             users.push(newUser);
             return {
                 user: newUser
