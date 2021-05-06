@@ -1,4 +1,4 @@
-import {API_BASE_URI, BASE_URI} from "@/services/services.js";
+import {API_BASE_URI} from "@/services/services.js";
 import axios from "axios";
 
 export const userService = {
@@ -37,9 +37,7 @@ export const userService = {
         let res = await axios.post(`${API_BASE_URI}/register`, {
             email,
             username,
-            password,
-            profilePicture: `${BASE_URI}/images/img_avatar.png`,
-            registrationDate: Date.now()
+            password
         });
         let success = false;
         let {user, error} = res.data;
