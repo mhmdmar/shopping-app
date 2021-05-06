@@ -39,7 +39,6 @@
     import {mapGetters, mapMutations} from "vuex";
     import {routesPaths} from "@/router/routes";
     import {utillyMixin} from "@/mixin/utilly.js";
-    import {BASE_URI} from "@/services/services";
     import {routerUtil} from "@/mixin/routerUtil";
     import CartHeader from "@/components/CartHeader";
     export default {
@@ -65,10 +64,7 @@
                 return this.user.username;
             },
             userProfilePicture() {
-                return (
-                    this.user.profilePicture ||
-                    `${BASE_URI}/images/img_avatar.png`
-                );
+                return this.user.profilePicture || "images/img_avatar.png";
             }
         }
     };

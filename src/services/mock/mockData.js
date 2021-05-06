@@ -43,7 +43,7 @@ export const users = [
         email: "mhmdmar@gmail.com",
         username: "mhmdmar",
         password: "123456",
-        profilePicture: `${BASE_URI}/images/logo.png`,
+        profilePicture: `images/logo.png`,
         cart: {
             items: [{id: "1", quantity: 5}]
         }
