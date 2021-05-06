@@ -1,9 +1,8 @@
-import {API_BASE_URI} from "@/services/services.js";
-import axios from "axios";
+import API from "@/services/API.js";
 
 export const userService = {
     async getAccounts() {
-        let res = await axios.get(`${API_BASE_URI}/users`);
+        let res = await API.get(`/users`);
         const {error, users} = res.data;
         let success = true;
         if (res.status !== 200) {
@@ -16,9 +15,7 @@ export const userService = {
         };
     },
     async getAccount(username, password) {
-        let res = await axios.get(
-            `${API_BASE_URI}/user?email=${username}&password=${password}`
-        );
+        let res = await API.get(`/user?email=${username}&password=${password}`);
         const {error, user} = res.data;
         let success = true;
         if (res.status !== 200) {
@@ -34,7 +31,7 @@ export const userService = {
         };
     },
     async registerAccount(email, username, password) {
-        let res = await axios.post(`${API_BASE_URI}/register`, {
+        let res = await API.post(`/register`, {
             email,
             username,
             password
