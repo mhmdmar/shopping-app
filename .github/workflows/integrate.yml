@@ -12,10 +12,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: cd client
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-      - run: cd ../server
-      - run: npm ci
+      - run: npm postinstall
       - run: npm test
