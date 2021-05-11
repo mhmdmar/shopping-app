@@ -64,7 +64,7 @@
                 return this.user.username;
             },
             userProfilePicture() {
-                return this.user.profilePicture || "images/img_avatar.png";
+                return this.user.profilePicture || "/images/img_avatar.png";
             }
         }
     };
