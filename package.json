@@ -8,7 +8,9 @@
     "start-server": "cd server && npm run start",
     "start-app:dev": "npm run build-client && cd server && npm run start:dev",
     "start-app:prod": "npm run build-client && cd server && npm run start:prod",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test-server && npm run test-client",
+    "test-server": "cd server && npm run test",
+    "test-client": "cd client && npm run test"
   },
   "repository": {
     "type": "git",
