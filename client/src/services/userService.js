@@ -18,6 +18,7 @@ export const userService = {
         let res = await API.get(`/user?email=${username}&password=${password}`);
         const {error, user} = res.data;
         let success = true;
+
         if (res.status !== 200) {
             success = false;
         }
