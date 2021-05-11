@@ -1,9 +1,8 @@
-import {API_BASE_URI, BASE_URI} from "@/services/services.js";
-import axios from "axios";
+import API from "@/services/API";
 
 export const cartService = {
     async getCart() {
-        let res = await axios.get(BASE_URI + "/cart");
+        let res = await API.get(`/cart`);
         const {error, cart} = res.data;
         let success = true;
         if (res.status !== 200) {
@@ -16,7 +15,7 @@ export const cartService = {
         };
     },
     async addToCart(email, password, productId, quantity) {
-        let res = await axios.post(`${API_BASE_URI}/cart`, {
+        let res = await API.post(`/cart`, {
             email,
             password,
             productId,

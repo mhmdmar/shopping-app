@@ -1,9 +1,8 @@
-import {API_BASE_URI} from "@/services/services";
 import {users} from "@/services/mock/mockData";
 import {isNumber, isUndefined} from "utilly";
 
 export default function cartRoutes() {
-    this.get(`${API_BASE_URI}/cart`, (schema, request) => {
+    this.get(`${this.config.baseURL}/cart`, (schema, request) => {
         const {email, password} = request.queryParams;
         const user = users.find(
             user => user.email === email && user.password === password
@@ -15,7 +14,7 @@ export default function cartRoutes() {
         }
         return user.cart;
     });
-    this.post(`${API_BASE_URI}/cart`, (schema, request) => {
+    this.post(`${this.config.baseURL}/cart`, (schema, request) => {
         let {email, password, productId, quantity} = JSON.parse(
             request.requestBody
         );

@@ -1,9 +1,8 @@
-import {API_BASE_URI} from "@/services/services";
 import {products} from "@/services/mock/mockData";
 import {extractQuery} from "@/services/mock/shared";
 
 export default function productsRoutes() {
-    this.get(`${API_BASE_URI}/products`, (schema, request) => {
+    this.get(`${this.config.baseURL}/products`, (schema, request) => {
         const queryParams = extractQuery(request.url);
         if (queryParams === null) {
             return products;
@@ -18,7 +17,7 @@ export default function productsRoutes() {
         }
         return null;
     });
-    this.get(`${API_BASE_URI}/product`, (schema, request) => {
+    this.get(`${this.config.baseURL}/product`, (schema, request) => {
         const {id} = request.queryParams;
         const product = products.find(product => product.id === id);
         if (!product) {

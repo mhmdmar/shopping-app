@@ -1,13 +1,11 @@
-import {API_BASE_URI} from "@/services/services";
 import {users} from "@/services/mock/mockData";
-import {BASE_URI} from "../services";
 export default function userRoutes() {
-    this.get(`${API_BASE_URI}/users`, () => {
+    this.get(`${this.config.baseURL}/users`, () => {
         return {
             users
         };
     });
-    this.get(`${API_BASE_URI}/user`, (schema, request) => {
+    this.get(`${this.config.baseURL}/user`, (schema, request) => {
         const {email, password} = request.queryParams;
         const user = users.find(
             user => user.email === email && user.password === password
@@ -21,7 +19,7 @@ export default function userRoutes() {
             user
         };
     });
-    this.post(`${API_BASE_URI}/register`, (schema, request) => {
+    this.post(`${this.config.baseURL}/register`, (schema, request) => {
         let newUser = JSON.parse(request.requestBody);
         const isEmailTaken =
             users.find(user => user.email === newUser.email) !== undefined;
@@ -30,8 +28,6 @@ export default function userRoutes() {
                 error: "email already exists"
             };
         } else {
-            newUser.profilePicture = `${BASE_URI}/images/img_avatar.png`;
-            newUser.registrationDate = Date.now();
             users.push(newUser);
             return {
                 user: newUser
