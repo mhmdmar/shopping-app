@@ -8,7 +8,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import {makeServer} from "@/./services/mock/mockServer";
-
 Vue.config.productionTip = false;
 
 if (process.env.NODE_ENV === "development") {
