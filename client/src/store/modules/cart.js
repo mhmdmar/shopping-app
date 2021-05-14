@@ -43,14 +43,6 @@ export default {
         },
         cartItems(state) {
             return state._cart.items;
-        },
-        cartItemsId(state) {
-            let productsId = [];
-            const items = state._cart.items;
-            for (let i = 0, len = items.length; i < len; i++) {
-                productsId.push(items[i].id);
-            }
-            return productsId;
         }
     }
 };

@@ -1,32 +1,35 @@
-const {products} = require("./mockData.js");
+import dbHelper from "../database/dbHelper.js";
 
-module.exports = router => {
+export default router => {
     router.get(`/api/products`, (req, res) => {
-        res.send(products);
-        /* const queryParams = extractQuery(request.url);
-        if (queryParams === null) {
-            return products;
-        }
-        const {id} = queryParams;
-        if (Array.isArray(id)) {
-            return products.filter(product => id.includes(product.id));
-        }
-        const product = products.find(product => product.id === id);
-        if (product) {
-            return [product];
-        }
-        return null;*/
+        const {id} = req.query;
+        dbHelper
+            .getProducts(id)
+            .then(products => {
+                res.send(products);
+            })
+            .catch(error => {
+                res.send({error});
+            });
     });
     router.get(`/api/product`, (req, res) => {
-        res.send(products[0]);
-        /*const {id} = request.queryParams;
-        const product = products.find(product => product.id === id);
-        if (!product) {
-            return {
-                error: "product doesn't exists"
-            };
-        }
-        return product;*/
+        const {id} = req.query;
+        dbHelper
+            .getProduct(id)
+            .then(product => {
+                if (product) {
+                    res.send(product);
+                } else {
+                    res.send({
+                        error: "product doesn't exists"
+                    });
+                }
+            })
+            .catch(error => {
+                res.send({
+                    error
+                });
+            });
     });
     return router;
 };
