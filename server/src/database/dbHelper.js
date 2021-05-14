@@ -1,4 +1,5 @@
 import mockData from "./mockData.js";
+import {compareHashedText, hashText} from "../utils/encryption.js";
 
 const {products, users} = mockData;
 class DBHelper {
@@ -8,12 +9,41 @@ class DBHelper {
             resolve(users);
         });
     }
-    async getUser(email, password) {
-        return new Promise(resolve => {
-            const user = users.find(
-                user => user.email === email && user.password === password
-            );
+    async getUser(email, password, isPasswordEncrypted) {
+        return new Promise(async resolve => {
+            let user = null;
+            for (let i = 0; i < users.length; i++) {
+                const curUser = users[i];
+                if (curUser.email === email) {
+                    if (
+                        isPasswordEncrypted &&
+                        (await compareHashedText(curUser.password, password))
+                    ) {
+                        user = curUser;
+                        break;
+                    } else if (curUser.password === password) {
+                        user = {...curUser, password: await hashText(password)};
+                        break;
+                    }
+                }
+            }
             resolve(user);
+        });
+    }
+    async addUser(email, username, password) {
+        return new Promise(async resolve => {
+            const newUser = {
+                email,
+                username,
+                password: await hashText(password)
+            };
+            if (users.some(user => user.email === newUser.email)) {
+                resolve({
+                    error: "email already taken"
+                });
+            } else {
+                resolve({user: newUser});
+            }
         });
     }
     async getProducts(id) {

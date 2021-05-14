@@ -18,13 +18,14 @@ const store = new Vuex.Store({
 
 const curUser = localStorage.getValue("user");
 if (!isNil(curUser) && !isUndefined(curUser)) {
-    userService.getAccount(curUser.email, curUser.password).then(response => {
-        const {user} = response;
-        if (!isNil(user)) {
-            store.commit("setUserSession", user);
-        }
-    });
-    store.commit("setUserSession", curUser);
+    userService
+        .getAccount(curUser.email, curUser.password, true)
+        .then(response => {
+            const {user} = response;
+            if (!isNil(user)) {
+                store.commit("setUserSession", user);
+            }
+        });
 }
 
 export default store;

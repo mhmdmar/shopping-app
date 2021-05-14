@@ -7,20 +7,33 @@ export default router => {
         });
     });
     router.get(`/api/user`, (req, res) => {
-        const {email, password} = req.query;
-        dbHelper.getUser(email, password).then(user => {
-            if (!user) {
-                res.send({
-                    error: "invalid email and/or password"
-                });
-            }
-            res.send({user});
-        });
+        const {email, password, isPasswordEncrypted} = req.query;
+        dbHelper
+            .getUser(email, password, isPasswordEncrypted === "true")
+            .then(user => {
+                console.log(user);
+                if (!user) {
+                    res.send({
+                        error: "invalid email and/or password"
+                    });
+                } else {
+                    res.send({user});
+                }
+            })
+            .catch(error => {
+                res.send({error});
+            });
     });
-    router.post(`/api/register`, (req, res) => {
-        res.send({
-            message: "registered"
-        });
+    router.post(`/api/register`, async (req, res) => {
+        const {email, username, password} = req.body;
+        dbHelper
+            .addUser(email, username, password)
+            .then(user => {
+                res.send(user);
+            })
+            .catch(error => {
+                res.send({error});
+            });
     });
     return router;
 };

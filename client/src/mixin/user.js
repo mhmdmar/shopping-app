@@ -27,8 +27,8 @@ export const userMixin = {
                         cb?.(error);
                     }
                 })
-                .catch(err => {
-                    console.error(err);
+                .catch(error => {
+                    cb?.(error);
                 })
                 .finally(() => {
                     this.setIsLoading(false);

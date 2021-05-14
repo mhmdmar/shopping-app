@@ -14,11 +14,12 @@ export const userService = {
             error
         };
     },
-    async getAccount(username, password) {
-        let res = await API.get(`/user?email=${username}&password=${password}`);
+    async getAccount(username, password, isPasswordEncrypted = false) {
+        let res = await API.get(
+            `/user?email=${username}&password=${password}&isPasswordEncrypted=${isPasswordEncrypted}`
+        );
         const {error, user} = res.data;
         let success = true;
-
         if (res.status !== 200) {
             success = false;
         }
@@ -28,7 +29,7 @@ export const userService = {
         return {
             success,
             user,
-            error: error || "invalid email/password"
+            error: error || "something went wrong, try again later :("
         };
     },
     async registerAccount(email, username, password) {

@@ -16,6 +16,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "bcrypt": "^5.0.1",
         "body-parser": "^1.19.0",
         "compression": "^1.7.4",
         "connect-history-api-fallback": "^1.6.0",
@@ -25,6 +26,7 @@
         "eslint": "^7.25.0",
         "eslint-plugin-prettier": "^3.4.0",
         "express": "^4.17.1",
-        "morgan": "^1.10.0"
+        "morgan": "^1.10.0",
+        "utilly": "^1.0.3"
     }
 }
