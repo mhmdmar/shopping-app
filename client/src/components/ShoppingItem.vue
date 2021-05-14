@@ -4,7 +4,17 @@
         <img :src="picture" :alt="title" />
         <div class="item-properties-container">
             <div class="product-title">
-                {{ title }}
+                <div v-if="id">
+                    <router-link
+                        class="route-item"
+                        :to="productPath + '/' + id"
+                    >
+                        {{ title }}
+                    </router-link>
+                </div>
+                <div v-else>
+                    {{ title }}
+                </div>
             </div>
             <div>Price: {{ price }}$</div>
             <div>Qty: {{ quantity }}</div>
@@ -13,12 +23,19 @@
 </template>
 
 <script>
+    import {routesPaths} from "@/router/routes";
+
     export default {
         name: "ShoppingItem",
         data() {
-            return {};
+            return {
+                productPath: routesPaths.product
+            };
         },
         props: {
+            id: {
+                default: null
+            },
             selected: {
                 required: false,
                 type: Boolean,

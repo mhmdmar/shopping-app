@@ -34,4 +34,7 @@
     .ellipses {
         @include ellipsis;
     }
+    img {
+        user-select: none;
+    }
 </style>

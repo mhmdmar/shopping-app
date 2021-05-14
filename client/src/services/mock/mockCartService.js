@@ -1,4 +1,4 @@
-import {users} from "@/services/mock/mockData";
+import {products, users} from "@/services/mock/mockData";
 import {isNumber, isUndefined} from "utilly";
 
 export default function cartRoutes() {
@@ -12,7 +12,11 @@ export default function cartRoutes() {
                 error: "invalid email and/or password"
             };
         }
-        return user.cart;
+        const items = user.cart?.items?.map(curItem => {
+            const product = products.find(item => item.id === curItem.id);
+            return {...product, quantity: curItem.quantity};
+        });
+        return {items};
     });
     this.post(`${this.config.baseURL}/cart`, (schema, request) => {
         let {email, password, productId, quantity} = JSON.parse(

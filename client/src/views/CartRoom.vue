@@ -1,10 +1,9 @@
 <template>
     <div class="cart-room-container">
-        <div class="cart-room-inner-container">
-            <h2>Shopping Cart</h2>
+        <div class="cart-room-inner-container" v-if="loaded">
+            <h2 class="title">Shopping Cart</h2>
             <div class="dropdown-divider"></div>
             <ShoppingList
-                v-if="loaded"
                 :items="items"
                 @itemSelectionChange="
                     (item, isSelected) => (item.selected = isSelected)
@@ -19,12 +18,12 @@
 </template>
 
 <script>
-import ShoppingList from "@/components/ShoppingList";
-import {mapGetters, mapMutations} from "vuex";
-import CheckoutWindow from "@/components/CheckoutWindow";
-import {cartService} from "@/services/cartService";
+    import ShoppingList from "@/components/ShoppingList";
+    import {mapGetters, mapMutations} from "vuex";
+    import CheckoutWindow from "@/components/CheckoutWindow";
+    import {cartService} from "@/services/cartService";
 
-export default {
+    export default {
         name: "CartRoom",
         components: {CheckoutWindow, ShoppingList},
         data() {
@@ -64,11 +63,11 @@ export default {
         computed: {
             ...mapGetters(["cartItems", "cartSize"]),
             itemsCount() {
-              return this.items.reduce((accumulator, item) => {
-                  if (item.selected) {
-                    accumulator += item.quantity;
-                  }
-                  return accumulator;
+                return this.items.reduce((accumulator, item) => {
+                    if (item.selected) {
+                        accumulator += item.quantity;
+                    }
+                    return accumulator;
                 }, 0);
             },
             priceSum() {
@@ -84,7 +83,14 @@ export default {
 </script>
 
 <style scoped>
+    .title {
+        text-align: center;
+    }
     .cart-room-container {
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: center;
     }
 </style>

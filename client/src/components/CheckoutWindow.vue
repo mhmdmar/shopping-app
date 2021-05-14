@@ -28,6 +28,6 @@
         display: flex;
         padding: 10px;
         flex-direction: column;
-        align-items: baseline;
+        align-items: center;
     }
 </style>
