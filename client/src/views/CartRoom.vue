@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import ShoppingList from "@/components/ShoppingList";
-import {mapGetters, mapMutations} from "vuex";
-import CheckoutWindow from "@/components/CheckoutWindow";
-import {cartService} from "@/services/cartService";
+    import ShoppingList from "@/components/ShoppingList";
+    import {mapGetters, mapMutations} from "vuex";
+    import CheckoutWindow from "@/components/CheckoutWindow";
+    import {cartService} from "@/services/cartService";
 
-export default {
+    export default {
         name: "CartRoom",
         components: {CheckoutWindow, ShoppingList},
         data() {
@@ -63,11 +63,11 @@ export default {
         computed: {
             ...mapGetters(["cartItems", "cartSize"]),
             itemsCount() {
-              return this.items.reduce((accumulator, item) => {
-                  if (item.selected) {
-                    accumulator += item.quantity;
-                  }
-                  return accumulator;
+                return this.items.reduce((accumulator, item) => {
+                    if (item.selected) {
+                        accumulator += item.quantity;
+                    }
+                    return accumulator;
                 }, 0);
             },
             priceSum() {

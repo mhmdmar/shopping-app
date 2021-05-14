@@ -1,8 +1,9 @@
 import API from "@/services/API";
 import store from "@/store";
-const user = store.getters.user;
+
 export const cartService = {
     async getCart() {
+        const user = store.getters.user;
         if (!user) {
             return {
                 error: "user must be signed in"
