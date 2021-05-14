@@ -29,7 +29,8 @@ const products = [
     },
     {
         id: "5",
-        picture: "https://m.media-amazon.com/images/I/51bq-oNA--L._AC_SR160,160_.jpg",
+        picture:
+            "https://m.media-amazon.com/images/I/51bq-oNA--L._AC_SR160,160_.jpg",
         title: "Dress",
         price: 1500000,
         rating: 1
@@ -63,7 +64,7 @@ const users = [
         }
     }
 ];
-module.exports = {
+export default {
     products,
     users
 };

@@ -19,12 +19,12 @@
 </template>
 
 <script>
-    import ShoppingList from "@/components/ShoppingList";
-    import {mapGetters, mapMutations} from "vuex";
-    import {productsService} from "@/services/productsService";
-    import CheckoutWindow from "@/components/CheckoutWindow";
+import ShoppingList from "@/components/ShoppingList";
+import {mapGetters, mapMutations} from "vuex";
+import CheckoutWindow from "@/components/CheckoutWindow";
+import {cartService} from "@/services/cartService";
 
-    export default {
+export default {
         name: "CartRoom",
         components: {CheckoutWindow, ShoppingList},
         data() {
@@ -34,20 +34,17 @@
             };
         },
         mounted() {
-            if (this.cartItemsId?.length > 0) {
+            if (this.cartSize) {
                 this.setIsLoading(true);
-                productsService
-                    .getProducts(this.cartItemsId)
+                cartService
+                    .getCart()
                     .then(res => {
-                        if (res !== null) {
-                            this.items = res.map(item => {
-                                const {quantity} = this.cartItems.find(
-                                    item => item.id === item.id
-                                );
-                                this.$set(item, "quantity", quantity);
+                        const items = res.items;
+                        if (items) {
+                            items.map(item => {
                                 this.$set(item, "selected", true);
-                                return item;
                             });
+                            this.items = items;
                         }
                     })
                     .catch(err => {
@@ -65,13 +62,13 @@
             ...mapMutations(["setIsLoading"])
         },
         computed: {
-            ...mapGetters(["cartItemsId", "cartItems"]),
+            ...mapGetters(["cartItems", "cartSize"]),
             itemsCount() {
-                return this.items.reduce((accumulator, item) => {
-                    if (item.selected) {
-                        accumulator += item.quantity;
-                    }
-                    return accumulator;
+              return this.items.reduce((accumulator, item) => {
+                  if (item.selected) {
+                    accumulator += item.quantity;
+                  }
+                  return accumulator;
                 }, 0);
             },
             priceSum() {

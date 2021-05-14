@@ -1,15 +1,20 @@
-const {users} = require("./mockData.js");
+import dbHelper from "../database/dbHelper.js";
 
-module.exports = router => {
+export default router => {
     router.get(`/api/users`, (req, res) => {
-        res.send(users);
-    });
-    router.get(`/api/users`, (req, res) => {
-        res.send(users);
+        dbHelper.getUsers().then(users => {
+            res.send(users);
+        });
     });
     router.get(`/api/user`, (req, res) => {
-        res.send({
-            user: users[0]
+        const {email, password} = req.query;
+        dbHelper.getUser(email, password).then(user => {
+            if (!user) {
+                res.send({
+                    error: "invalid email and/or password"
+                });
+            }
+            res.send({user});
         });
     });
     router.post(`/api/register`, (req, res) => {
@@ -19,23 +24,3 @@ module.exports = router => {
     });
     return router;
 };
-/*
-
-module.exports = router => {
-    router.get(`users`, (req, res) => {
-        res.send(users);
-    });
-    router.get(`api/users`, (req, res) => {
-        res.send(users);
-    });
-    router.get(`api/user`, (req, res) => {
-        res.send(users[0]);
-    });
-    router.post(`api/register`, (req, res) => {
-        res.send({
-            message: "registered"
-        });
-    });
-    return router;
-};
-*/

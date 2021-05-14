@@ -1,16 +1,23 @@
 import API from "@/services/API";
-
+import store from "@/store";
+const user = store.getters.user;
 export const cartService = {
     async getCart() {
-        let res = await API.get(`/cart`);
-        const {error, cart} = res.data;
+        if (!user) {
+            return {
+                error: "user must be signed in"
+            };
+        }
+        const {email, password} = user;
+        const res = await API.get(`/cart?email=${email}&password=${password}`);
+        const {error, items} = res.data;
         let success = true;
         if (res.status !== 200) {
             success = false;
         }
         return {
             success,
-            cart,
+            items,
             error
         };
     },
