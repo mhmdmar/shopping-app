@@ -1,8 +1,9 @@
 import app from "./src/app.js";
 import http from "http";
 import config from "../config/config.js";
-const port = normalizePort(config.PORT || "3000");
-const host = config.HOST || "localhost";
+const {PORT, HOST} = config;
+const port = normalizePort(PORT || "3000");
+const host = HOST || "localhost";
 
 app.set("port", port);
 

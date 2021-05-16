@@ -1,7 +1,7 @@
-import {isNil} from "utilly";
+import {isNil, isUndefined} from "utilly";
 import {routesPaths} from "@/router/routes";
 import {userService} from "@/services/userService";
-import {mapMutations} from "vuex";
+import {mapActions, mapMutations} from "vuex";
 
 export const userMixin = {
     mounted() {
@@ -12,22 +12,25 @@ export const userMixin = {
         }
     },
     methods: {
-        ...mapMutations(["setIsLoading", "setUserSession"]),
+        ...mapMutations(["setIsLoading"]),
+        ...mapActions(["setUserSession"]),
         loginUser(email, password, cb) {
             this.setIsLoading(true);
             userService
-                .getAccount(email, password)
-                .then(response => {
-                    const {error, user} = response;
-                    if (!isNil(user)) {
-                        this.setUserSession(user);
+                .login(email, password)
+                .then(payload => {
+                    const {error, token, user} = payload;
+                    if (!isNil(token) && !isUndefined(token)) {
+                        this.setUserSession({token, user});
                         cb?.();
-                    } else if (!isNil(error)) {
+                    } else if (!isNil(error) && !isUndefined(error)) {
                         console.error(error);
                         cb?.(error);
                     }
                 })
+
                 .catch(error => {
+                    this.removeUserSession();
                     cb?.(error);
                 })
                 .finally(() => {

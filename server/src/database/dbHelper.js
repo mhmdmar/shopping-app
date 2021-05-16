@@ -1,5 +1,4 @@
 import mockData from "./mockData.js";
-import {compareHashedText, hashText} from "../utils/encryption.js";
 
 const {products, users} = mockData;
 class DBHelper {
@@ -9,40 +8,44 @@ class DBHelper {
             resolve(users);
         });
     }
-    async getUser(email, password, isPasswordEncrypted) {
+    async getUserByEmail(email) {
         return new Promise(async resolve => {
-            let user = null;
-            for (let i = 0; i < users.length; i++) {
-                const curUser = users[i];
-                if (curUser.email === email) {
-                    if (
-                        isPasswordEncrypted &&
-                        (await compareHashedText(curUser.password, password))
-                    ) {
-                        user = curUser;
-                        break;
-                    } else if (curUser.password === password) {
-                        user = {...curUser, password: await hashText(password)};
-                        break;
-                    }
-                }
-            }
-            resolve(user);
+            const user = users.find(user => {
+                return user.email === email;
+            });
+            resolve({
+                email: user.email,
+                username: user.username,
+                cart: user.cart
+            });
+        });
+    }
+    async getUser(email, password) {
+        return new Promise(async resolve => {
+            const user = users.find(user => {
+                return user.email === email && user.password === password;
+            });
+            resolve({
+                email: user.email,
+                username: user.username,
+                cart: user.cart
+            });
         });
     }
     async addUser(email, username, password) {
         return new Promise(async resolve => {
-            const newUser = {
-                email,
-                username,
-                password: await hashText(password)
-            };
-            if (users.some(user => user.email === newUser.email)) {
+            if (users.some(user => user.email === email)) {
                 resolve({
                     error: "email already taken"
                 });
             } else {
-                resolve({user: newUser});
+                users.push({
+                    email,
+                    username,
+                    password,
+                    profilePicture: `/images/logo.png`,
+                    cart: {items: []}
+                });
             }
         });
     }
@@ -65,14 +68,12 @@ class DBHelper {
             resolve(product);
         });
     }
-    async getCart(email, password) {
+    async getCart(email) {
         return new Promise(resolve => {
-            const user = users.find(
-                user => user.email === email && user.password === password
-            );
+            const user = users.find(user => user.email === email);
             if (!user) {
                 resolve({
-                    error: "invalid email and/or password"
+                    error: "user doesn't exist, if it was deleted by accident please contact support!"
                 });
             }
             const items = user.cart?.items?.map(curItem => {
@@ -80,6 +81,28 @@ class DBHelper {
                 return {...product, quantity: curItem.quantity};
             });
             resolve({items});
+        });
+    }
+    async addProduct(email, id, quantity = 1) {
+        if (isNaN(quantity)) {
+            quantity = 1;
+        } else if (typeof quantity !== "number") {
+            quantity = Number(quantity);
+        }
+        return new Promise(resolve => {
+            const user = users.find(user => user.email === email);
+            const index = user.cart.items.findIndex(
+                _item => _item.id === id
+            );
+            if (index > -1) {
+                user.cart.items[index].quantity += quantity;
+            } else {
+                user.cart.items.push({
+                    id,
+                    quantity
+                });
+            }
+            resolve();
         });
     }
 }

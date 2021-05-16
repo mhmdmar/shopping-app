@@ -18,7 +18,7 @@ export default {
         updateCartSize(state, size) {
             state._size = size;
         },
-        initCartItems(state, items) {
+        setCartItems(state, items) {
             state._cart.setItems(items);
             state._size = state._cart.getSize();
         }
@@ -30,12 +30,6 @@ export default {
                 throw new Error("Cannot add product with unknown id");
             }
             commit("addItem", {id, quantity});
-        },
-        setCartItems({commit}, payload) {
-            if (!isNil(payload) && !isUndefined(payload)) {
-                const {items} = payload;
-                commit("initCartItems", items);
-            }
         }
     },
     getters: {

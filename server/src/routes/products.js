@@ -1,4 +1,5 @@
 import dbHelper from "../database/dbHelper.js";
+import {message} from "../utils/constants.js";
 
 export default router => {
     router.get(`/api/products`, (req, res) => {
@@ -21,7 +22,7 @@ export default router => {
                     res.send(product);
                 } else {
                     res.send({
-                        error: "product doesn't exists"
+                        error: message.error.PRODUCT_DOESNT_EXISTS
                     });
                 }
             })

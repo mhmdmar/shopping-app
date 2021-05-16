@@ -5,9 +5,10 @@ import logger from "morgan";
 import cors from "cors";
 import path from "path";
 import initRoutes from "./routes/index.js";
+import {message} from "./utils/constants.js";
 const staticFileMiddleware = express.static("dist");
 const app = express();
-
+app.use(staticFileMiddleware);
 app.use(compression());
 app.use(logger("dev"));
 app.use(express.json());
@@ -19,13 +20,14 @@ app.use(cors());
 
 app.use("/", initRoutes());
 
-app.use(staticFileMiddleware);
-
 app.all("*", (_req, res) => {
     try {
         res.sendFile(path.join(__dirname, "../public", "index.html"));
     } catch (error) {
-        res.json({success: false, message: "Something went wrong"});
+        res.json({
+            success: false,
+            message: message.error.UNKNOWN_ERROR
+        });
     }
 });
 
