@@ -9,7 +9,7 @@ export default router => {
     });
     router.get(`/api/user`, (req, res) => {
         const {email, password} = req.query;
-        if (!email || password) {
+        if (!email || !password) {
             res.send({
                 error: "invalid email and/or password"
             });
