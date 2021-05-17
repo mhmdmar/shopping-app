@@ -1,28 +1,48 @@
-import localStorage from "@/services/localStorage";
-import {isUndefined, isNil} from "utilly";
+import appStorage from "@/services/appStorage";
+import API from "@/services/API";
+
 export default {
     state: {
+        _userToken: appStorage.getValue("user-token") || null,
         _user: null
     },
     mutations: {
-        setUserSession(state, user) {
+        setUser(state, user) {
             state._user = user;
-            localStorage.setValue("user", user);
-            this.dispatch("setCartItems", user.cart);
         },
-        removeUserSession(state) {
-            state._user = null;
-            localStorage.removeKey("user");
-            this.dispatch("setCartItems", null);
+        setUserToken(state, userToken) {
+            state._userToken = userToken;
         }
     },
-    actions: {},
+    actions: {
+        setUserSession({state, commit}, payload) {
+            const {token, user} = payload;
+            commit("setUser", user);
+            commit("setCartItems", user?.cart?.items || []);
+            if (token) {
+                commit("setUserToken", token);
+                appStorage.setValue("user-token", token);
+            }
+            API.defaults.headers.common[
+                "authorization"
+            ] = `Bearer ${state._userToken}`;
+        },
+        removeUserSession({commit}) {
+            commit("setUserToken", null);
+            commit("setUser", null);
+            delete API.defaults.headers.common["authorization"];
+            appStorage.removeKey("user-token");
+        }
+    },
     getters: {
+        userToken(state) {
+            return state._userToken;
+        },
         user(state) {
             return state._user;
         },
         isLoggedIn(state) {
-            return !isUndefined(state._user) && !isNil(state._user);
+            return !!state._userToken;
         }
     }
 };

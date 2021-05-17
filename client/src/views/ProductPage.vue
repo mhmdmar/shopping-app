@@ -43,12 +43,7 @@
 
                 this.setIsLoading(true);
                 cartService
-                    .addToCart(
-                        this.user.email,
-                        this.user.password,
-                        id,
-                        quantity
-                    )
+                    .addToCart(id, quantity)
                     .then((/* cart */) => {
                         this.addItemToCart({
                             id,

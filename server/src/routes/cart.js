@@ -1,10 +1,11 @@
 import dbHelper from "../database/dbHelper.js";
+import authenticateJWT from "../middleware/authentication.js";
 
 export default router => {
-    router.get(`/api/cart`, (req, res) => {
-        const {email, password} = req.query;
+    router.get(`/api/cart`, authenticateJWT, (req, res) => {
+        const {userEmail} = req;
         dbHelper
-            .getCart(email, password)
+            .getCart(userEmail)
             .then(items => {
                 res.send(items);
             })
@@ -14,7 +15,15 @@ export default router => {
                 });
             });
     });
-    router.post(`/api/cart`, (req, res) => {
-        res.send({message: "added successfully"});
+    router.post(`/api/cart`, authenticateJWT, (req, res) => {
+        const {userEmail} = req;
+        const {id, quantity} = req.body;
+        if (id) {
+            dbHelper.addProduct(userEmail, id, quantity).then(() => {
+                res.send({message: "added successfully"});
+            });
+        } else {
+            res.send({message: "invalid request body"});
+        }
     });
 };

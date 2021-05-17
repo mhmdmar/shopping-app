@@ -90,7 +90,7 @@
     import {isNil, isUndefined} from "utilly";
     import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
-    import {mapGetters, mapMutations} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
     import {userMixin} from "@/mixin/user";
     import {routerUtil} from "@/mixin/routerUtil";
 
@@ -141,7 +141,7 @@
             }
         },
         methods: {
-            ...mapMutations(["setUserSession"]),
+            ...mapActions(["setUserSession"]),
             isFormValid() {
                 return (
                     !this.validUser.errMsg &&

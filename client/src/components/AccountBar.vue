@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from "vuex";
+    import {mapGetters, mapActions} from "vuex";
     import {routesPaths} from "@/router/routes";
     import {utillyMixin} from "@/mixin/utilly.js";
     import {routerUtil} from "@/mixin/routerUtil";
@@ -52,7 +52,7 @@
             };
         },
         methods: {
-            ...mapMutations(["removeUserSession"]),
+            ...mapActions(["removeUserSession"]),
             logout() {
                 this.removeUserSession();
                 this.navigateToRoute(routesPaths.home);

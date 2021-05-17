@@ -10,7 +10,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 import {createMockServer} from "@/./services/mock/mockServer";
 Vue.config.productionTip = false;
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "_development") {
     createMockServer();
 }
 

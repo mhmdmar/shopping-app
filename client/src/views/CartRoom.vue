@@ -1,7 +1,13 @@
 <template>
     <div class="cart-room-container">
         <div class="cart-room-inner-container" v-if="loaded">
-            <h2 class="title">Shopping Cart</h2>
+            <div class="cart-room-header-container">
+                <b-check
+                    :checked="allItemsSelected"
+                    @change="selectAllChecked"
+                ></b-check>
+                <h2 class="title">Shopping Cart</h2>
+            </div>
             <div class="dropdown-divider"></div>
             <ShoppingList
                 :items="items"
@@ -58,10 +64,18 @@
             }
         },
         methods: {
-            ...mapMutations(["setIsLoading"])
+            ...mapMutations(["setIsLoading"]),
+            selectAllChecked(isSelected) {
+                this.items.forEach(item => {
+                    item.selected = isSelected;
+                });
+            }
         },
         computed: {
             ...mapGetters(["cartItems", "cartSize"]),
+            allItemsSelected() {
+                return this.items.every(item => item.selected);
+            },
             itemsCount() {
                 return this.items.reduce((accumulator, item) => {
                     if (item.selected) {
@@ -92,5 +106,11 @@
         flex-direction: column;
         flex-wrap: wrap;
         align-content: center;
+    }
+    .cart-room-header-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
     }
 </style>
