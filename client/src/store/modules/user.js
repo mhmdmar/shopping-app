@@ -1,9 +1,8 @@
-import appStorage from "@/services/appStorage";
 import API from "@/services/API";
 
 export default {
     state: {
-        _userToken: appStorage.getValue("user-token") || null,
+        _userToken: null,
         _user: null
     },
     mutations: {
@@ -17,11 +16,13 @@ export default {
     actions: {
         setUserSession({state, commit}, payload) {
             const {token, user} = payload;
+            if (!user) {
+                return;
+            }
             commit("setUser", user);
-            commit("setCartItems", user?.cart?.items || []);
+            commit("setCartItems", user?.cart?.items);
             if (token) {
                 commit("setUserToken", token);
-                appStorage.setValue("user-token", token);
             }
             API.defaults.headers.common[
                 "authorization"
@@ -31,7 +32,6 @@ export default {
             commit("setUserToken", null);
             commit("setUser", null);
             delete API.defaults.headers.common["authorization"];
-            appStorage.removeKey("user-token");
         }
     },
     getters: {

@@ -67,8 +67,9 @@
             this.setIsLoading(true);
             productsService
                 .getProducts()
-                .then(products => {
-                    this.products = products;
+                .then(payload => {
+                    const {items} = payload;
+                    this.products = items;
                 })
                 .catch(err => {
                     console.error(err);

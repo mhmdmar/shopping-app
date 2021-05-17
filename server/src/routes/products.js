@@ -7,7 +7,7 @@ export default router => {
         dbHelper
             .getProducts(id)
             .then(products => {
-                res.send(products);
+                res.send({items: products});
             })
             .catch(error => {
                 res.send({error});

@@ -28,7 +28,8 @@ class DBHelper {
             resolve({
                 email: user.email,
                 username: user.username,
-                cart: user.cart
+                cart: user.cart,
+                profilePicture: user.profilePicture
             });
         });
     }
@@ -39,25 +40,35 @@ class DBHelper {
                     error: "email already taken"
                 });
             } else {
-                users.push({
+                const user = {
                     email,
                     username,
                     password,
                     profilePicture: `/images/logo.png`,
                     cart: {items: []}
+                };
+                users.push(user);
+                resolve({
+                    email: user.email,
+                    username: user.username,
+                    cart: user.cart,
+                    profilePicture: user.profilePicture
                 });
             }
         });
     }
     async getProducts(id) {
         return new Promise(resolve => {
-            let result;
+            let result = null;
             if (!id) {
                 result = products;
             } else if (Array.isArray(id)) {
                 result = products.filter(product => id.includes(product.id));
             } else {
-                result = products.find(product => product.id === id);
+                const product = products.find(product => product.id === id);
+                if (product) {
+                    result = [product];
+                }
             }
             resolve(result);
         });
@@ -91,9 +102,7 @@ class DBHelper {
         }
         return new Promise(resolve => {
             const user = users.find(user => user.email === email);
-            const index = user.cart.items.findIndex(
-                _item => _item.id === id
-            );
+            const index = user.cart.items.findIndex(_item => _item.id === id);
             if (index > -1) {
                 user.cart.items[index].quantity += quantity;
             } else {
