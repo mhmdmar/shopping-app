@@ -23,6 +23,7 @@
             SvgSprite
         },
         mixins: [utillyMixin, userMixin],
+        methods: {},
         computed: {
             ...mapGetters(["isLoading"])
         }

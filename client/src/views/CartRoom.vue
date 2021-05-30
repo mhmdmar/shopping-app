@@ -1,6 +1,6 @@
 <template>
     <div class="cart-room-container">
-        <div class="cart-room-inner-container" v-if="loaded">
+        <div class="cart-room-inner-container" v-if="!isLoading">
             <div class="cart-room-header-container">
                 <b-check
                     :checked="allItemsSelected"
@@ -27,41 +27,18 @@
     import ShoppingList from "@/components/ShoppingList";
     import {mapGetters, mapMutations} from "vuex";
     import CheckoutWindow from "@/components/CheckoutWindow";
-    import {cartService} from "@/services/cartService";
+    import {productsService} from "@/services/productsService";
 
     export default {
         name: "CartRoom",
         components: {CheckoutWindow, ShoppingList},
         data() {
             return {
-                loaded: false,
                 items: []
             };
         },
         mounted() {
-            if (this.cartSize) {
-                this.setIsLoading(true);
-                cartService
-                    .getCart()
-                    .then(res => {
-                        const items = res.items;
-                        if (items) {
-                            items.map(item => {
-                                this.$set(item, "selected", true);
-                            });
-                            this.items = items;
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    })
-                    .finally(() => {
-                        this.setIsLoading(false);
-                        this.loaded = true;
-                    });
-            } else {
-                this.loaded = true;
-            }
+            this.updateItems();
         },
         methods: {
             ...mapMutations(["setIsLoading"]),
@@ -69,10 +46,37 @@
                 this.items.forEach(item => {
                     item.selected = isSelected;
                 });
+            },
+            updateItems() {
+                if (this.cartItems.length > 0) {
+                    this.setIsLoading(true);
+                    productsService
+                        .getProductsFromList(this.cartItems)
+                        .then(items => {
+                            this.items =
+                                items?.map(item => {
+                                    return {
+                                        ...item,
+                                        selected: true
+                                    };
+                                }) || [];
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                        .finally(() => {
+                            this.setIsLoading(false);
+                        });
+                }
+            }
+        },
+        watch: {
+            cartItems() {
+                this.updateItems();
             }
         },
         computed: {
-            ...mapGetters(["cartItems", "cartSize"]),
+            ...mapGetters(["cartItems", "cartSize", "isLoading"]),
             allItemsSelected() {
                 return this.items.every(item => item.selected);
             },

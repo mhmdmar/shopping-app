@@ -1,26 +1,28 @@
 import {isNil, isUndefined} from "utilly";
-import Cart from "@/utils/classes/Cart.js";
-
+import cartUtil from "@/utils/objects/cartUtil.js";
 export default {
     state: {
-        _cart: new Cart(),
-        _size: 0
+        items: [],
+        size: 0
     },
     mutations: {
         addItem(state, {id, quantity}) {
-            state._cart.addItem(id, quantity);
-            state._size = state._cart.getSize();
+            cartUtil.addItem(state.items, id, quantity);
+            this.commit("updateCart");
         },
-        removeItem(state, {id, quantity}) {
-            state._cart.removeItem(id, quantity);
-            state._size = state._cart.getSize();
+        updateCart() {
+            this.commit("updateCartSize");
         },
-        updateCartSize(state, size) {
-            state._size = size;
+        removeItem(state, {id}) {
+            cartUtil.removeItem(state.items, id);
+            this.commit("updateCart");
+        },
+        updateCartSize(state) {
+            state.size = cartUtil.getSize(state.items);
         },
         setCartItems(state, items) {
-            state._cart.setItems(items);
-            state._size = state._cart.getSize();
+            state.items = cartUtil.setItems(items);
+            this.commit("updateCart");
         }
     },
     actions: {
@@ -34,13 +36,10 @@ export default {
     },
     getters: {
         cartSize(state) {
-            return state._size;
-        },
-        cart(state) {
-            return state._cart;
+            return state.size;
         },
         cartItems(state) {
-            return state._cart.items;
+            return state.items;
         }
     }
 };

@@ -27,14 +27,15 @@ export const userService = {
         };
     },
     async registerAccount(email, username, password) {
-        let res = await API.post(`/register`, {
+        const res = await API.post(`/register`, {
             email,
             username,
             password
         });
-        let {user, error} = res.data;
+        let {user, error, token} = res.data;
         return {
             user,
+            token,
             error
         };
     }

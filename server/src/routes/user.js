@@ -9,23 +9,29 @@ export default router => {
     });
     router.get(`/api/user`, (req, res) => {
         const {email, password} = req.query;
-        dbHelper
-            .getUser(email, password)
-            .then(user => {
-                if (user) {
-                    const token = createToken(user);
-                    res.send({token, user});
-                } else {
-                    res.status(StatusCodes.UNAUTHORIZED);
-                    res.send({
-                        error: "invalid email and/or password"
-                    });
-                }
-            })
-            .catch(error => {
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-                res.send({error});
+        if (!email || !password) {
+            res.send({
+                error: "invalid email and/or password"
             });
+        } else {
+            dbHelper
+                .getUser(email, password)
+                .then(user => {
+                    if (user) {
+                        const token = createToken(user);
+                        res.send({token, user});
+                    } else {
+                        res.status(StatusCodes.UNAUTHORIZED);
+                        res.send({
+                            error: "invalid email and/or password"
+                        });
+                    }
+                })
+                .catch(error => {
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+                    res.send({error});
+                });
+        }
     });
 
     router.get(`/api/restore-session`, (req, res) => {
@@ -46,7 +52,8 @@ export default router => {
         dbHelper
             .addUser(email, username, password)
             .then(user => {
-                res.send(user);
+                const token = createToken(user);
+                res.send({user, token});
             })
             .catch(error => {
                 res.send({error});

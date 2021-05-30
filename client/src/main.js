@@ -7,12 +7,7 @@ import {BootstrapVue, IconsPlugin} from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
-import {createMockServer} from "@/./services/mock/mockServer";
 Vue.config.productionTip = false;
-
-if (process.env.NODE_ENV === "_development") {
-    createMockServer();
-}
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);

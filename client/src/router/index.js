@@ -12,7 +12,7 @@ const router = new VueRouter({
     linkExactActiveClass: "active"
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (to.meta.requiredAuth && !store.getters.isLoggedIn) {
         next({path: routesPaths.login, query: {redirect: to.fullPath}});
     } else {

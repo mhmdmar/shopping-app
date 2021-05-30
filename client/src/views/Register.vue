@@ -87,7 +87,6 @@
 </template>
 
 <script>
-    import {isNil, isUndefined} from "utilly";
     import {userService} from "@/services/userService";
     import {routesPaths} from "@/router/routes";
     import {mapActions, mapGetters} from "vuex";
@@ -180,10 +179,10 @@
                             this.username,
                             this.password
                         )
-                        .then(response => {
-                            const {error, user} = response;
-                            if (!isUndefined(user) && !isNil(user)) {
-                                this.setUserSession(user);
+                        .then(payload => {
+                            const {error, token, user} = payload;
+                            if (user) {
+                                this.setUserSession({token, user});
                                 this.navigateToRoute(routesPaths.home);
                             } else {
                                 this.registerErrMessage = error;
