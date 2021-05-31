@@ -1,15 +1,11 @@
 <template>
     <div class="products-table-container">
-        <div v-if="products !== null">
-            <div
-                class="products-row"
-                v-for="(productsRow, i) in productsRows"
-                :key="i"
-            >
+        <div v-if="numberOfProducts > 0">
+            <div class="products-container">
                 <div
-                    class="product-column"
-                    v-for="product in productsRow"
-                    :key="product.id"
+                    v-for="(product, i) in productsByPageNumber"
+                    :key="i"
+                    class="product-item"
                 >
                     <router-link :to="'product/' + product.id">
                         <Product
@@ -22,6 +18,19 @@
                     </router-link>
                 </div>
             </div>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="totalPages"
+                :per-page="perPage"
+                :disabled="totalPages <= 1"
+                align="center"
+                first-text="⏮"
+                prev-text="⏪"
+                next-text="⏩"
+                last-text="⏭"
+                class="mt-4 pagination-wrapper"
+                @change="changePageNumber"
+            ></b-pagination>
         </div>
     </div>
 </template>
@@ -36,32 +45,39 @@
             Product
         },
         computed: {
-            productsRows() {
-                let rows = [];
+            totalPages() {
+                return Math.ceil(this.numberOfProducts / this.perRow);
+            },
+            productsByPageNumber() {
+                let products = [];
+                let startIndex = (this.currentPage - 1) * this.perPage;
+                let endIndex = this.currentPage * this.perPage;
                 for (
-                    let i = 0;
-                    i < this.products.length;
-                    i += this.productPerRow
+                    let i = startIndex;
+                    i < endIndex && i < this.numberOfProducts;
+                    i++
                 ) {
-                    let row = [];
-                    for (let j = 0; j < this.productPerRow; j++) {
-                        if (this.products[i + j]) {
-                            row.push(this.products[i + j]);
-                        }
-                    }
-                    rows.push(row);
+                    products.push(this.products[i]);
                 }
-                return rows;
+                return products;
+            },
+            numberOfProducts() {
+                return this.products?.length || 0;
             }
         },
         data() {
             return {
-                productPerRow: 3,
-                products: null
+                products: null,
+                perPage: 11,
+                perRow: 3,
+                currentPage: 1
             };
         },
         methods: {
-            ...mapMutations(["setIsLoading"])
+            ...mapMutations(["setIsLoading"]),
+            changePageNumber(newPageNumber) {
+                this.currentPage = newPageNumber;
+            }
         },
         mounted() {
             this.setIsLoading(true);
@@ -83,26 +99,37 @@
 
 <style scoped>
     .products-table-container {
-    }
-    .products-row {
         display: flex;
-        border-bottom: 2px solid #ddd;
-        margin-bottom: 16px;
+        flex-direction: column;
     }
-    .product-column {
-        height: 100%;
-        padding: 10px;
-        margin-right: 2%;
-        float: left;
-        min-height: 1px;
-        overflow: visible;
-        width: 31.33%;
+    .products-container {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 0;
+        height: 85%;
+        position: fixed;
+        overflow: auto;
+        gap: 2px;
+        justify-content: center;
     }
+    .product-item {
+        list-style: none;
+        flex: 0 0 32.333333%;
+    }
+    .pagination-wrapper {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+
     @media only screen and (max-width: 600px) {
         .products-table-container {
             overflow: scroll;
         }
-        .product-column {
+        .products-container {
+            height: 80%;
+        }
+        .product-item {
             width: inherit;
         }
     }

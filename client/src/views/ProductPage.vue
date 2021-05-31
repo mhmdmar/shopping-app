@@ -85,4 +85,9 @@
         margin-right: auto;
         width: 50%;
     }
+    @media only screen and (max-width: 600px) {
+        .product-page-container {
+            width: 100%;
+        }
+    }
 </style>
