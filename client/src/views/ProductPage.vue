@@ -20,18 +20,34 @@
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {cartService} from "@/services/cartService";
     import {isNil} from "utilly";
+    import {routesPaths} from "@/router/routes";
     export default {
         name: "ProductPage",
         components: {Product},
         data() {
             return {
                 product: null,
-                id: this.$route.params.id
+                id: this.$route.params.id,
+                productRoute: routesPaths.product
             };
         },
         methods: {
             ...mapMutations(["setIsLoading"]),
             ...mapActions(["addItemToCart"]),
+            setProduct() {
+                this.setIsLoading(true);
+                productsService
+                    .getProduct(this.id)
+                    .then(product => {
+                        this.product = product;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false);
+                    });
+            },
             addProductToCart(id, quantity) {
                 if (isNil(this.user)) {
                     return;
@@ -58,19 +74,15 @@
                     });
             }
         },
+
         mounted() {
-            this.setIsLoading(true);
-            productsService
-                .getProduct(this.id)
-                .then(product => {
-                    this.product = product;
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-                .finally(() => {
-                    this.setIsLoading(false);
-                });
+            this.setProduct();
+        },
+        watch: {
+            "$route.params.id"(newVal) {
+                this.id = newVal;
+                this.setProduct();
+            }
         },
         computed: {
             ...mapGetters(["user", "isLoggedIn"])
@@ -81,9 +93,8 @@
 <style scoped>
     .product-page-container {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
         width: 50%;
+        margin: 10% auto;
     }
     @media only screen and (max-width: 600px) {
         .product-page-container {

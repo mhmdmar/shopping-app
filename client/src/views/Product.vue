@@ -69,7 +69,7 @@
 <style scoped lang="scss">
     @import "src/styles/ellipsis";
     .product-container {
-        border: 1px solid black;
+        border: 1px solid darkgray;
         width: 100%;
         height: 100%;
     }

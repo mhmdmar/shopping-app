@@ -9,14 +9,6 @@ export const userService = {
             error
         };
     },
-    async restoreSession(token) {
-        let res = await API.get(`/restore-session?token=${token}`);
-        const {error, user} = res.data;
-        return {
-            user,
-            error
-        };
-    },
     async login(username, password) {
         let res = await API.get(`/user?email=${username}&password=${password}`);
         const {error, token, user} = res.data;

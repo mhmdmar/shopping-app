@@ -1,12 +1,9 @@
 <template>
-    <div class="account-bar-container">
-        <div class="account-container" v-if="!isNil(user)">
-            <CartHeader
-                class="cart-header border-right"
-                :cartSize="cartSize"
-            ></CartHeader>
-            <div class="bar-container">
+    <div>
+        <div class="account-bar-container" v-if="!isNil(user)">
+            <div class="user-container">
                 <b-img
+                    class="profile-picture"
                     :src="userProfilePicture"
                     thumbnail
                     fluid
@@ -15,19 +12,25 @@
                 <div class="username">
                     <span class="ellipses">{{ username }}</span>
                 </div>
+                <b-dropdown
+                    id="dropdown-right"
+                    right
+                    variant="primary"
+                    class="s-1"
+                >
+                    <b-dropdown-item href="#">Placeholder</b-dropdown-item>
+                    <b-dropdown-item href="#">Placeholder</b-dropdown-item>
+                    <b-dropdown-item href="#">Placeholder</b-dropdown-item>
+                    <div class="dropdown-divider"></div>
+                    <b-dropdown-item href="#" @click="navigateToRoute(userPath)"
+                        >Settings</b-dropdown-item
+                    >
+                    <b-dropdown-item href="#" @click="logout"
+                        >Logout</b-dropdown-item
+                    >
+                </b-dropdown>
             </div>
-            <b-dropdown id="dropdown-right" right variant="primary" class="s-1">
-                <b-dropdown-item href="#">Placeholder</b-dropdown-item>
-                <b-dropdown-item href="#">Placeholder</b-dropdown-item>
-                <b-dropdown-item href="#">Placeholder</b-dropdown-item>
-                <div class="dropdown-divider"></div>
-                <b-dropdown-item href="#" @click="navigateToRoute(userPath)"
-                    >Settings</b-dropdown-item
-                >
-                <b-dropdown-item href="#" @click="logout"
-                    >Logout</b-dropdown-item
-                >
-            </b-dropdown>
+            <CartHeader :cartSize="cartSize"></CartHeader>
         </div>
         <div v-else>
             <router-link :to="loginPath">Login</router-link>
@@ -48,7 +51,8 @@
         data() {
             return {
                 loginPath: routesPaths.login,
-                userPath: routesPaths.user
+                userPath: routesPaths.user,
+                user: null
             };
         },
         methods: {
@@ -71,33 +75,27 @@
 </script>
 
 <style scoped lang="scss">
-    .account-container {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-    }
-    .bar-container {
-        margin-right: 5px;
-        display: flex;
-        cursor: default;
-        & > img {
-            width: 40px;
-            border-radius: 20%;
-        }
-        & > .username {
-            padding: 0 10px;
-            user-select: none;
-            max-width: 120px;
-            display: inline-flex;
-            align-items: center;
-        }
-    }
     .account-bar-container {
         cursor: pointer;
         display: flex;
         align-items: center;
-    }
-    .cart-header {
-        margin-right: 10px;
+        gap: 4px;
+        & > .user-container {
+            margin-right: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            & > .profile-picture {
+                width: 40px;
+                border-radius: 20%;
+            }
+            & > .username {
+                padding: 0 10px;
+                user-select: none;
+                max-width: 120px;
+                display: inline-flex;
+                align-items: center;
+            }
+        }
     }
 </style>
