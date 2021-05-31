@@ -40,10 +40,10 @@
     };
 </script>
 <style scoped lang="scss">
+    @import "../styles/sharedStyles";
     .cart-container {
-        border: 1px solid transparent;
+        @include clickable-container;
         &:hover {
-            border: 1px solid white;
             > .cart-icon {
                 background: inherit;
             }

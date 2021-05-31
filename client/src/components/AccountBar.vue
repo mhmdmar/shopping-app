@@ -10,7 +10,7 @@
                     :alt="username"
                 />
                 <div class="username">
-                    <span class="ellipses">{{ username }}</span>
+                    <span class="username-text">{{ username }}</span>
                 </div>
                 <b-dropdown
                     id="dropdown-right"
@@ -74,12 +74,14 @@
 </script>
 
 <style scoped lang="scss">
+    @import "../styles/sharedStyles";
     .account-bar-container {
         cursor: pointer;
         display: flex;
         align-items: center;
         gap: 4px;
         & > .user-container {
+            @include clickable-container;
             margin-right: 5px;
             display: flex;
             flex-direction: row;
@@ -96,5 +98,8 @@
                 align-items: center;
             }
         }
+    }
+    .username-text {
+        @include ellipsis;
     }
 </style>

@@ -67,7 +67,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import "src/styles/ellipsis";
+    @import "../styles/sharedStyles";
     .product-container {
         border: 1px solid darkgray;
         width: 100%;

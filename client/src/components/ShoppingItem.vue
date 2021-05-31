@@ -67,7 +67,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "src/styles/ellipsis";
+    @import "../styles/sharedStyles";
 
     .item-container {
         display: flex;

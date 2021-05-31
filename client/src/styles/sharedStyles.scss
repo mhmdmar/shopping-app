@@ -1,0 +1,12 @@
+@mixin ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin clickable-container {
+    border: 1px solid transparent;
+    &:hover {
+        border: 1px solid white;
+    }
+}
