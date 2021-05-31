@@ -31,10 +31,6 @@
 </script>
 
 <style lang="scss">
-    @import "src/styles/ellipsis";
-    .ellipses {
-        @include ellipsis;
-    }
     img {
         user-select: none;
     }

@@ -49,18 +49,9 @@ function getSize(items) {
     });
     return count;
 }
-function toString(items) {
-    let str = "";
-    _loopItems(items, item => {
-        str += `----\nid -> ${item.id}\nquantity -> ${item.quantity}\n----`;
-    });
-
-    return str;
-}
 export default {
     setItems,
     removeItem,
     addItem,
-    getSize,
-    toString
+    getSize
 };

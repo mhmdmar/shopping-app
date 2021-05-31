@@ -7,7 +7,7 @@
                     :key="i"
                     class="product-item"
                 >
-                    <router-link :to="'product/' + product.id">
+                    <router-link :to="productPath + '/' + product.id">
                         <Product
                             :id="product.id"
                             :picture="product.picture"
@@ -37,14 +37,16 @@
 
 <script>
     import Product from "@/views/Product";
+    import {routesPaths} from "@/router/routes";
     import {productsService} from "@/services/productsService.js";
-    import {mapMutations} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     export default {
         name: "ProductsTable",
         components: {
             Product
         },
         computed: {
+            ...mapGetters(["products"]),
             totalPages() {
                 return Math.ceil(this.numberOfProducts / this.perRow);
             },
@@ -67,14 +69,14 @@
         },
         data() {
             return {
-                products: null,
+                productPath: routesPaths.product,
                 perPage: 11,
                 perRow: 3,
                 currentPage: 1
             };
         },
         methods: {
-            ...mapMutations(["setIsLoading"]),
+            ...mapMutations(["setIsLoading", "setProducts"]),
             changePageNumber(newPageNumber) {
                 this.currentPage = newPageNumber;
             }
@@ -85,7 +87,9 @@
                 .getProducts()
                 .then(payload => {
                     const {items} = payload;
-                    this.products = items;
+                    if (items) {
+                        this.setProducts(items);
+                    }
                 })
                 .catch(err => {
                     console.error(err);
