@@ -26,11 +26,13 @@
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
-                    <SearchBar
-                        :suggestions="suggestions"
-                        @suggestionChosen="suggestionChosen"
-                    ></SearchBar>
-                    <AccountBar class="account-bar"></AccountBar>
+                    <div class="right-menu-container">
+                        <SearchBar
+                            :suggestions="suggestions"
+                            @suggestionChosen="suggestionChosen"
+                        ></SearchBar>
+                        <AccountBar class="account-bar"></AccountBar>
+                    </div>
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
@@ -92,5 +94,10 @@
         color: inherit;
         text-decoration: inherit;
         background-color: inherit;
+    }
+    .right-menu-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 </style>

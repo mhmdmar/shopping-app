@@ -51,8 +51,7 @@
         data() {
             return {
                 loginPath: routesPaths.login,
-                userPath: routesPaths.user,
-                user: null
+                userPath: routesPaths.user
             };
         },
         methods: {
