@@ -63,10 +63,12 @@
         computed: {
             ...mapGetters(["products"]),
             suggestions() {
-                return this.products.map(product => product.title);
+                return this.products?.map(product => product.title);
             },
             visibleRoutes() {
-                return this.routes.filter(route => route.meta?.hidden !== true);
+                return this.routes?.filter(
+                    route => route.meta?.hidden !== true
+                );
             }
         },
         methods: {

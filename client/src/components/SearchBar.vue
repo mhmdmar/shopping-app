@@ -1,5 +1,5 @@
 <template>
-    <div style="position:relative">
+    <div style="position:relative" ref="search-bar-container">
         <input
             class="form-control"
             type="search"
@@ -8,11 +8,12 @@
             @keydown.down="down"
             @keydown.up="up"
             @input="change"
+            @focus="change"
+            @blur="onBlur($event)"
         />
         <ul
             v-if="autoCompleteEnabled"
             class="dropdown-menu"
-            style="width:100%"
             v-bind:class="{closed: !openSuggestion}"
         >
             <li
@@ -76,6 +77,12 @@
             }
         },
         methods: {
+            onBlur() {
+                // TODO remove setTimeout and handle closing the list in a better
+                setTimeout(() => {
+                    this.open = false;
+                }, 100);
+            },
             enter() {
                 if (this.autoCompleteEnabled && this.open) {
                     this.suggestionChosen();
@@ -143,6 +150,7 @@
         flex-direction: column;
         overflow: auto;
         height: 200px;
+        width: 100%;
         gap: 3px;
     }
     .closed {
