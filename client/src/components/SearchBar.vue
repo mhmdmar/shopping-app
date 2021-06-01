@@ -31,6 +31,8 @@
 </template>
 
 <script>
+    import fuzzysearch from "fuzzysearch";
+
     export default {
         name: "SearchBar",
         props: {
@@ -53,13 +55,10 @@
         computed: {
             matches() {
                 const filteredMatches = [];
+                const searchQuery = this.searchQuery.toLowerCase();
                 for (let i = 0, len = this.suggestions.length; i < len; i++) {
                     const curSuggestion = this.suggestions[i];
-                    if (
-                        curSuggestion
-                            .toLowerCase()
-                            .indexOf(this.searchQuery.toLowerCase()) >= 0
-                    ) {
+                    if (this.search(curSuggestion.toLowerCase(), searchQuery)) {
                         filteredMatches.push({
                             text: curSuggestion,
                             index: i
@@ -77,6 +76,9 @@
             }
         },
         methods: {
+            search(word, source) {
+                return fuzzysearch(source, word);
+            },
             onBlur() {
                 // TODO remove setTimeout and handle closing the list in a better
                 setTimeout(() => {
