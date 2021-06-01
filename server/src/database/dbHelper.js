@@ -32,8 +32,8 @@ class DBHelper {
                     cart: user.cart,
                     profilePicture: user.profilePicture
                 });
-            }else{
-                resolve(null)
+            } else {
+                resolve(null);
             }
         });
     }
