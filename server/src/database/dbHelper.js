@@ -25,12 +25,16 @@ class DBHelper {
             const user = users.find(user => {
                 return user.email === email && user.password === password;
             });
-            resolve({
-                email: user.email,
-                username: user.username,
-                cart: user.cart,
-                profilePicture: user.profilePicture
-            });
+            if (user) {
+                resolve({
+                    email: user.email,
+                    username: user.username,
+                    cart: user.cart,
+                    profilePicture: user.profilePicture
+                });
+            }else{
+                resolve(null)
+            }
         });
     }
     async addUser(email, username, password) {

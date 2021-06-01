@@ -21,7 +21,6 @@ export default router => {
                         const token = createToken(user);
                         res.send({token, user});
                     } else {
-                        res.status(StatusCodes.UNAUTHORIZED);
                         res.send({
                             error: "invalid email and/or password"
                         });

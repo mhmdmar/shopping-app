@@ -13,7 +13,7 @@ export const userMixin = {
     },
     methods: {
         ...mapMutations(["setIsLoading"]),
-        ...mapActions(["setUserSession"]),
+        ...mapActions(["setUserSession", "removeUserSession"]),
         loginUser(email, password, cb) {
             this.setIsLoading(true);
             userService
