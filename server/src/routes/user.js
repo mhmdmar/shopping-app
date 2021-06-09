@@ -7,6 +7,7 @@ export default router => {
             res.send(users);
         });
     });
+
     router.get(`/api/user`, (req, res) => {
         const {email, password} = req.query;
         if (!email || !password) {
@@ -32,21 +33,7 @@ export default router => {
                 });
         }
     });
-
-    router.get(`/api/restore-session`, (req, res) => {
-        const {token} = req.query;
-        if (token) {
-            validateToken(token, (err, user) => {
-                const {email} = user;
-                if (email) {
-                    dbHelper.getUserByEmail(email).then(user => {
-                        res.send({user});
-                    });
-                }
-            });
-        }
-    });
-    router.post(`/api/register`, async (req, res) => {
+    router.post(`/api/user`, async (req, res) => {
         const {email, username, password} = req.body;
         dbHelper
             .addUser(email, username, password)

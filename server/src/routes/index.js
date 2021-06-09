@@ -2,8 +2,9 @@ import express from "express";
 import addUserRoutes from "./user.js";
 import addProductsRoutes from "./products.js";
 import addCartRoutes from "./cart.js";
-const router = express.Router();
 import {message} from "../utils/constants.js";
+
+const router = express.Router();
 
 export default function initRoutes() {
     router.get("/", function (req, res) {

@@ -6,6 +6,8 @@ import cors from "cors";
 import path from "path";
 import initRoutes from "./routes/index.js";
 import {message} from "./utils/constants.js";
+import dbHelper from "./database/dbHelper.js";
+dbHelper.connect();
 const staticFileMiddleware = express.static("dist");
 const app = express();
 app.use(staticFileMiddleware);

@@ -19,6 +19,7 @@
                 </div>
             </div>
             <b-pagination
+                v-if="numberOfProducts > perPage"
                 v-model="currentPage"
                 :total-rows="totalPages"
                 :per-page="perPage"
@@ -85,10 +86,9 @@
             this.setIsLoading(true);
             productsService
                 .getProducts()
-                .then(payload => {
-                    const {items} = payload;
-                    if (items) {
-                        this.setProducts(items);
+                .then(products => {
+                    if (Array.isArray(products)) {
+                        this.setProducts(products);
                     }
                 })
                 .catch(err => {
@@ -119,6 +119,7 @@
     .product-item {
         list-style: none;
         flex: 0 0 32.333333%;
+        max-height: 400px;
     }
     .pagination-wrapper {
         position: fixed;

@@ -7,7 +7,7 @@ function setItems(items) {
     }
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        addItem(newItems, item.id, item.quantity);
+        addItem(newItems, item.productId, item.quantity);
     }
     return newItems;
 }
@@ -16,26 +16,26 @@ function _loopItems(items, cb) {
         cb(items[i], i);
     }
 }
-function _findItemIndexById(items, id) {
-    return items.findIndex(item => item.id === id);
+function _findItemIndexById(items, productId) {
+    return items.findIndex(item => item.productId === productId);
 }
-function _itemByIdCB(items, id, cb) {
-    const itemIndex = _findItemIndexById(items, id);
+function _itemByIdCB(items, productId, cb) {
+    const itemIndex = _findItemIndexById(items, productId);
     const item = items[itemIndex] || null;
     cb(item, itemIndex);
 }
 
-function addItem(items, id, quantity = 1) {
-    _itemByIdCB(items, id, item => {
+function addItem(items, productId, quantity = 1) {
+    _itemByIdCB(items, productId, item => {
         if (item === null) {
-            items.push({id, quantity});
+            items.push({productId, quantity});
         } else {
             addQuantity(item, quantity);
         }
     });
 }
-function removeItem(items, id) {
-    _itemByIdCB(items, id, (item, index) => {
+function removeItem(items, productId) {
+    _itemByIdCB(items, productId, (item, index) => {
         if (item !== null) {
             items.splice(index, 1);
         }

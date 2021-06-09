@@ -11,6 +11,9 @@
             @productAdded="addProductToCart"
         >
         </Product>
+        <div v-else-if="!isLoading">
+            <h3>Product with id {{ this.id }} is not found on the server</h3>
+        </div>
     </div>
 </template>
 
@@ -21,6 +24,7 @@
     import {cartService} from "@/services/cartService";
     import {isNil} from "utilly";
     import {routesPaths} from "@/router/routes";
+
     export default {
         name: "ProductPage",
         components: {Product},
@@ -39,7 +43,9 @@
                 productsService
                     .getProduct(this.id)
                     .then(product => {
-                        this.product = product;
+                        if (product !== null) {
+                            this.product = product;
+                        }
                     })
                     .catch(err => {
                         console.error(err);
@@ -85,7 +91,7 @@
             }
         },
         computed: {
-            ...mapGetters(["user", "isLoggedIn"])
+            ...mapGetters(["user", "isLoggedIn", "isLoading"])
         }
     };
 </script>
@@ -96,6 +102,7 @@
         width: 50%;
         margin: 10% auto;
     }
+
     @media only screen and (max-width: 600px) {
         .product-page-container {
             width: 100%;
