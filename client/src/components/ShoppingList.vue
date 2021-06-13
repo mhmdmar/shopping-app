@@ -9,6 +9,10 @@
                     :quantity="item.quantity"
                     :selected="item.selected"
                     :id="item.id"
+                    @quantityUpdated="
+                        newQuantity =>
+                            $emit('itemQuantityUpdated', item, newQuantity)
+                    "
                     @itemSelectionChange="
                         isSelected =>
                             $emit('itemSelectionChange', item, isSelected)
@@ -38,6 +42,9 @@
         },
         data() {
             return {};
+        },
+        methods: {
+            cartItemQuantityUpdated() {}
         }
     };
 </script>

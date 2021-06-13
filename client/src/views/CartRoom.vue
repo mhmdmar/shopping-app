@@ -11,6 +11,7 @@
             <div class="dropdown-divider"></div>
             <ShoppingList
                 :items="items"
+                @itemQuantityUpdated="productQuantityUpdated"
                 @itemSelectionChange="
                     (item, isSelected) => (item.selected = isSelected)
                 "
@@ -25,9 +26,10 @@
 
 <script>
     import ShoppingList from "@/components/ShoppingList";
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import CheckoutWindow from "@/components/CheckoutWindow";
     import {cartMixin} from "@/mixin/cart";
+    import {cartService} from "@/services/cartService";
 
     export default {
         name: "CartRoom",
@@ -42,6 +44,21 @@
             this.updateCart();
         },
         methods: {
+            ...mapMutations(["setIsLoading"]),
+            productQuantityUpdated(item, newQuantity) {
+                this.setIsLoading(true);
+                cartService
+                    .updateCartItem(item.id, this.cartId, newQuantity)
+                    .then(() => {
+                        this.updateCart();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false);
+                    });
+            },
             selectAllChecked(isSelected) {
                 this.items.forEach(item => {
                     item.selected = isSelected;
@@ -54,7 +71,7 @@
             }
         },
         computed: {
-            ...mapGetters(["cartItems", "isLoading"]),
+            ...mapGetters(["cartItems", "isLoading", "cartId"]),
             allItemsSelected() {
                 return this.items.every(item => item.selected);
             },

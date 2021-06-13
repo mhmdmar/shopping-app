@@ -51,7 +51,7 @@
                 }
                 this.setIsLoading(true);
                 cartService
-                    .addToCart(productId, quantity, this.cartId)
+                    .addToCart(productId, this.cartId, quantity)
                     .then(() => {
                         this.updateCart();
                     })

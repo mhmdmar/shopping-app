@@ -6,10 +6,13 @@ const message = {
         INVALID_REQUEST_BODY: "invalid request body",
         INVALID_END_POINT: "end point doesn't exists",
         UNKNOWN_DATABASE_ERROR: "database error, ops...",
-        UNAUTHORIZED: "unauthorized request"
+        UNAUTHORIZED: "unauthorized request",
+        UPDATE_INVALID_ITEM:
+            "cannot update item that doesn't exist in the database"
     },
     success: {
-        added: "added successfully"
+        added: "added successfully",
+        updated: "updated successfully"
     }
 };
 export {message};

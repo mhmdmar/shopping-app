@@ -8,8 +8,19 @@ export const cartService = {
         const {error, data} = res.data;
         return error ? null : data;
     },
-    async addToCart(productId, quantity, cartId) {
+    async addToCart(productId, cartId, quantity) {
         const {error, data} = await API.post(`/cart`, {
+            productId,
+            quantity,
+            cartId
+        });
+        return {
+            data,
+            error
+        };
+    },
+    async updateCartItem(productId, cartId, quantity) {
+        const {error, data} = await API.put(`/cart`, {
             productId,
             quantity,
             cartId

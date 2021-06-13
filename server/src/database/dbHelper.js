@@ -170,25 +170,37 @@ class DBHelper {
                 });
         });
     }
+    _removeCartProduct(cartId, productId) {
+        return new Promise((resolve, reject) => {
+            let queryString = `DELETE from public."CartItems" WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
+            this.query(queryString).then(resolve, reject);
+        });
+    }
     _updateCartProduct(cartId, productId, quantity) {
         return new Promise((resolve, reject) => {
             let queryString = `UPDATE public."CartItems" SET quantity= ${quantity} WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
             this.query(queryString).then(resolve, reject);
         });
     }
+
     _insertProductToCart(cartId, productId, quantity) {
         return new Promise((resolve, reject) => {
             let queryString = `INSERT INTO public."CartItems"("cartId", "productId", "quantity")VALUES (${cartId}, ${productId}, ${quantity})`;
             this.query(queryString).then(resolve, reject);
         });
     }
-    addProduct(email, cartId, productId, quantity = 1) {
+    validateNumber(input) {
+        if (isNaN(input)) {
+            input = 1;
+        } else if (typeof input !== "number") {
+            input = Number(input);
+        }
+        return input;
+    }
+
+    addProductToCart(email, cartId, productId, quantity = 1) {
         return new Promise((resolve, reject) => {
-            if (isNaN(quantity)) {
-                quantity = 1;
-            } else if (typeof quantity !== "number") {
-                quantity = Number(quantity);
-            }
+            quantity = this.validateNumber(quantity);
             this._getCartProduct(cartId, productId)
                 .then(data => {
                     if (data) {
@@ -207,6 +219,42 @@ class DBHelper {
                             .catch(() => {
                                 reject(message.error.UNKNOWN_DATABASE_ERROR);
                             });
+                    }
+                })
+                .catch(() => {
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
+                });
+        });
+    }
+
+    updateProductToCart(email, cartId, productId, quantity) {
+        return new Promise((resolve, reject) => {
+            if (!quantity) {
+                reject(message.error.INVALID_REQUEST_BODY);
+            }
+            quantity = this.validateNumber(quantity);
+            this._getCartProduct(cartId, productId)
+                .then(data => {
+                    if (data) {
+                        if (quantity === 0) {
+                            this._removeCartProduct(cartId, productId, quantity)
+                                .then(resolve)
+                                .catch(() => {
+                                    reject(
+                                        message.error.UNKNOWN_DATABASE_ERROR
+                                    );
+                                });
+                        } else {
+                            this._updateCartProduct(cartId, productId, quantity)
+                                .then(resolve)
+                                .catch(() => {
+                                    reject(
+                                        message.error.UNKNOWN_DATABASE_ERROR
+                                    );
+                                });
+                        }
+                    } else {
+                        reject(message.error.UPDATE_INVALID_ITEM);
                     }
                 })
                 .catch(() => {

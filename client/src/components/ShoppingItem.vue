@@ -16,17 +16,25 @@
                     {{ title }}
                 </div>
             </div>
-            <div>Price: {{ price }}$</div>
-            <div>Qty: {{ quantity }}</div>
+            <div class="price-container">Price: {{ price }}$</div>
+            <div class="quantity-container">
+                Quantity:
+                <EditableItem
+                    :value="quantity"
+                    @valueChanged="updateQuantity"
+                ></EditableItem>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
     import {routesPaths} from "@/router/routes";
+    import EditableItem from "@/components/EditableItem/EditableItem";
 
     export default {
         name: "ShoppingItem",
+        components: {EditableItem},
         data() {
             return {
                 productPath: routesPaths.product
@@ -61,6 +69,9 @@
         methods: {
             selectedClicked(isSelected) {
                 this.$emit("itemSelectionChange", isSelected);
+            },
+            updateQuantity(newQuantity) {
+                this.$emit("quantityUpdated", newQuantity);
             }
         }
     };
@@ -85,5 +96,13 @@
     }
     .product-title {
         @include ellipsis;
+    }
+    .quantity-container {
+        display: flex;
+        flex-direction: row;
+        gap: 2px;
+    }
+    div {
+        cursor: default;
     }
 </style>
