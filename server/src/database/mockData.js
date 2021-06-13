@@ -379,7 +379,3 @@ const users = [
         }
     }
 ];
-export default {
-    products,
-    users
-};

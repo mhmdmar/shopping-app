@@ -14,23 +14,26 @@ export default {
         }
     },
     actions: {
-        setUserSession({state, commit}, payload) {
-            const {token, user} = payload;
+        setUserSession({state, commit, dispatch}, payload) {
+            const {token, user, cart} = payload;
             if (!user) {
                 return;
             }
             commit("setUser", user);
-            commit("setCartItems", user?.cart?.items);
-            if (token) {
-                commit("setUserToken", token);
+            commit("setUserToken", token);
+            if (cart) {
+                commit("setCartId", cart?.cartId);
+                dispatch("updateCartItems", cart?.items);
             }
             API.defaults.headers.common[
                 "authorization"
             ] = `Bearer ${state._userToken}`;
         },
-        removeUserSession({commit}) {
+        removeUserSession({commit, dispatch}) {
             commit("setUserToken", null);
             commit("setUser", null);
+            commit("setCartId", null);
+            dispatch("updateCartItems", []);
             delete API.defaults.headers.common["authorization"];
         }
     },

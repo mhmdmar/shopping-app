@@ -19,9 +19,9 @@ export const userMixin = {
             userService
                 .login(email, password)
                 .then(payload => {
-                    const {error, token, user} = payload;
+                    const {error, token, user, cart} = payload;
                     if (!isNil(token) && !isUndefined(token)) {
-                        this.setUserSession({token, user});
+                        this.setUserSession({token, user, cart});
                         cb?.();
                     } else if (!isNil(error) && !isUndefined(error)) {
                         console.error(error);

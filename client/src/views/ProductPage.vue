@@ -20,14 +20,16 @@
 <script>
     import Product from "@/views/Product";
     import {productsService} from "@/services/productsService";
-    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import {cartService} from "@/services/cartService";
     import {isNil} from "utilly";
     import {routesPaths} from "@/router/routes";
+    import {cartMixin} from "@/mixin/cart";
 
     export default {
         name: "ProductPage",
         components: {Product},
+        mixins: [cartMixin],
         data() {
             return {
                 product: null,
@@ -37,15 +39,21 @@
         },
         methods: {
             ...mapMutations(["setIsLoading"]),
-            ...mapActions(["addItemToCart"]),
-            setProduct() {
+            addProductToCart(productId, quantity) {
+                if (isNil(this.user)) {
+                    return;
+                }
+                if (!this.cartId) {
+                    console.error("cartId is missing");
+                }
+                if (quantity < -1) {
+                    quantity = 1;
+                }
                 this.setIsLoading(true);
-                productsService
-                    .getProduct(this.id)
-                    .then(product => {
-                        if (product !== null) {
-                            this.product = product;
-                        }
+                cartService
+                    .addToCart(productId, quantity, this.cartId)
+                    .then(() => {
+                        this.updateCart();
                     })
                     .catch(err => {
                         console.error(err);
@@ -54,23 +62,14 @@
                         this.setIsLoading(false);
                     });
             },
-            addProductToCart(id, quantity) {
-                if (isNil(this.user)) {
-                    return;
-                }
-
-                if (quantity < -1) {
-                    quantity = 1;
-                }
-
+            setProduct() {
                 this.setIsLoading(true);
-                cartService
-                    .addToCart(id, quantity)
-                    .then((/* cart */) => {
-                        this.addItemToCart({
-                            id,
-                            quantity
-                        });
+                productsService
+                    .getProduct(this.id)
+                    .then(product => {
+                        if (product !== null) {
+                            this.product = product;
+                        }
                     })
                     .catch(err => {
                         console.error(err);
@@ -91,7 +90,7 @@
             }
         },
         computed: {
-            ...mapGetters(["user", "isLoggedIn", "isLoading"])
+            ...mapGetters(["user", "isLoggedIn", "isLoading", "cartId"])
         }
     };
 </script>

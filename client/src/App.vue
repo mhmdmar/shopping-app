@@ -11,7 +11,7 @@
     import SvgSprite from "@/components/SvgSprite.vue";
     import Topbar from "@/components/Topbar.vue";
     import Spinner from "@/components/Spinner";
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import {utillyMixin} from "@/mixin/utilly.js";
     import {userMixin} from "@/mixin/user";
 
@@ -23,7 +23,12 @@
             SvgSprite
         },
         mixins: [utillyMixin, userMixin],
-        methods: {},
+        mounted() {
+            this.setIsLoading(false);
+        },
+        methods: {
+            ...mapMutations(["setIsLoading"])
+        },
         computed: {
             ...mapGetters(["isLoading"])
         }

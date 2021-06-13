@@ -11,23 +11,38 @@ export const userService = {
     },
     async login(username, password) {
         let res = await API.get(`/user?email=${username}&password=${password}`);
-        const {error, token, user} = res.data;
+        const {error, data} = res.data;
+        let user = null,
+            token = null,
+            cart = null;
+        if (data) {
+            user = data.user;
+            token = data.token;
+            cart = data.cart;
+        }
         return {
             token,
             user,
+            cart,
             error
         };
     },
     async registerAccount(email, username, password) {
-        const res = await API.post(`/register`, {
+        const res = await API.post(`/user`, {
             email,
             username,
             password
         });
-        let {user, error, token} = res.data;
+        const {error, data} = res.data;
+        let user = null,
+            token = null;
+        if (data) {
+            user = data.user;
+            token = data.token;
+        }
         return {
-            user,
             token,
+            user,
             error
         };
     }

@@ -25,49 +25,27 @@
 
 <script>
     import ShoppingList from "@/components/ShoppingList";
-    import {mapGetters, mapMutations} from "vuex";
+    import {mapGetters} from "vuex";
     import CheckoutWindow from "@/components/CheckoutWindow";
-    import {productsService} from "@/services/productsService";
+    import {cartMixin} from "@/mixin/cart";
 
     export default {
         name: "CartRoom",
         components: {CheckoutWindow, ShoppingList},
+        mixins: [cartMixin],
         data() {
             return {
                 items: []
             };
         },
         mounted() {
-            this.updateItems();
+            this.updateCart();
         },
         methods: {
-            ...mapMutations(["setIsLoading"]),
             selectAllChecked(isSelected) {
                 this.items.forEach(item => {
                     item.selected = isSelected;
                 });
-            },
-            updateItems() {
-                if (this.cartItems.length > 0) {
-                    this.setIsLoading(true);
-                    productsService
-                        .getProductsFromList(this.cartItems)
-                        .then(items => {
-                            this.items =
-                                items?.map(item => {
-                                    return {
-                                        ...item,
-                                        selected: true
-                                    };
-                                }) || [];
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        })
-                        .finally(() => {
-                            this.setIsLoading(false);
-                        });
-                }
             }
         },
         watch: {
@@ -76,7 +54,7 @@
             }
         },
         computed: {
-            ...mapGetters(["cartItems", "cartSize", "isLoading"]),
+            ...mapGetters(["cartItems", "isLoading"]),
             allItemsSelected() {
                 return this.items.every(item => item.selected);
             },

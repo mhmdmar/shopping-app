@@ -1,10 +1,7 @@
-import mockData from "./mockData.js";
 import dbConfig from "./config.js";
-const {products, users} = mockData;
 import pg from "pg";
 const {Client} = pg;
-const UNKNOWN_DATABASE_ERROR = "database error, ops...";
-const INVALID_USERNAME_PASSWORD = "invalid email and/or password";
+import {message} from "../utils/constants.js";
 const DEFAULT_USER_PROFILE_PICTURE = "/images/img_avatar.png";
 class DBHelper {
     constructor() {
@@ -18,7 +15,7 @@ class DBHelper {
         this.client.close();
     }
 
-    async query(queryString, singleResult) {
+    query(queryString, singleResult) {
         return new Promise((resolve, reject) => {
             this.client
                 .query(queryString)
@@ -33,47 +30,66 @@ class DBHelper {
                 });
         });
     }
-    async getUsers() {
+    getUsers() {
         return new Promise((resolve, reject) => {
             const queryString = `SELECT email, username, password, "profilePicture" FROM public."Users";`;
             this.query(queryString)
                 .then(resolve)
                 .catch(() => {
-                    reject(UNKNOWN_DATABASE_ERROR);
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
                 });
         });
     }
 
-    async getUser(email, password) {
+    getUser(email, password) {
         return new Promise((resolve, reject) => {
             let queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
             this.query(queryString, true)
                 .then(userData => {
                     if (userData !== null) {
-                        queryString = `SELECT "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
+                        queryString = `SELECT "Carts"."cartId", "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
                                         WHERE "userId" ='${email}' AND "checkedOut" = false;`;
                         this.query(queryString)
                             .then(items => {
+                                let cartId;
+                                if (!items) {
+                                    // TODO createNewEmptyCart() and assign id to it;
+                                    // cartId = newCartId
+                                } else {
+                                    // TODO validate only one checkedOutCart exists (cartId is unique in the array)
+                                    cartId = items[0]?.["cartId"];
+                                    items = items.map(
+                                        ({quantity, productId}) => {
+                                            return {quantity, productId};
+                                        }
+                                    );
+                                }
                                 resolve({
-                                    email: userData.email,
-                                    username: userData.username,
+                                    user: {
+                                        email: userData.email,
+                                        username: userData.username,
+                                        profilePicture: userData.profilePicture
+                                    },
                                     cart: {
+                                        cartId,
                                         items
                                     }
                                 });
                             })
-                            .catch(() => reject(UNKNOWN_DATABASE_ERROR));
+                            .catch(() =>
+                                reject(message.error.UNKNOWN_DATABASE_ERROR)
+                            );
                     } else {
                         resolve(null);
                     }
                 })
                 .catch(() => {
-                    reject(UNKNOWN_DATABASE_ERROR);
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
                 });
         });
     }
 
-    async addUser(email, username, password) {
+    addUser(email, username, password) {
         return new Promise((resolve, reject) => {
             const queryString = `INSERT INTO public."Users" ("email","username","password","profilePicture")
                             VALUES ('${email}','${username}','${password}','${DEFAULT_USER_PROFILE_PICTURE}')`;
@@ -92,14 +108,14 @@ class DBHelper {
                     if (err.code === "23505") {
                         reject(`email already exists`);
                     } else {
-                        reject(UNKNOWN_DATABASE_ERROR);
+                        reject(message.error.UNKNOWN_DATABASE_ERROR);
                     }
                 });
         });
     }
 
-    async getProducts(productId) {
-        return new Promise(async (resolve, reject) => {
+    getProducts(productId) {
+        return new Promise((resolve, reject) => {
             let queryString;
             if (!productId) {
                 queryString = `SELECT *FROM public."Products";`;
@@ -117,52 +133,85 @@ class DBHelper {
             this.query(queryString)
                 .then(resolve)
                 .catch(() => {
-                    reject(UNKNOWN_DATABASE_ERROR);
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
                 });
         });
     }
 
-    async getProduct(id) {
+    getProduct(id) {
         return new Promise((resolve, reject) => {
             const queryString = `SELECT * FROM public."Products" WHERE id = '${id}'`;
             this.query(queryString, true)
                 .then(resolve)
                 .catch(() => {
-                    reject(UNKNOWN_DATABASE_ERROR);
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
                 });
         });
     }
-
-    async getCart(email) {
-        return new Promise(async (resolve, reject) => {
+    _getCartProduct(cartId, productId) {
+        return new Promise((resolve, reject) => {
+            let queryString = `SELECT "cartId", "productId", "quantity" FROM public."CartItems" 
+                                    WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
+            this.query(queryString, true)
+                .then(resolve)
+                .catch(() => {
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
+                });
+        });
+    }
+    getCart(email) {
+        return new Promise((resolve, reject) => {
             let queryString = `SELECT "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
                                         WHERE "userId" ='${email}' AND "checkedOut" = false;`;
             this.query(queryString)
                 .then(resolve)
                 .catch(() => {
-                    reject(UNKNOWN_DATABASE_ERROR);
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
                 });
         });
     }
-
-    async addProduct(email, id, quantity = 1) {
-        if (isNaN(quantity)) {
-            quantity = 1;
-        } else if (typeof quantity !== "number") {
-            quantity = Number(quantity);
-        }
-        return new Promise(resolve => {
-            const user = users.find(user => user.email === email);
-            const index = user.cart.items.findIndex(_item => _item.id === id);
-            if (index > -1) {
-                user.cart.items[index].quantity += quantity;
-            } else {
-                user.cart.items.push({
-                    id,
-                    quantity
-                });
+    _updateCartProduct(cartId, productId, quantity) {
+        return new Promise((resolve, reject) => {
+            let queryString = `UPDATE public."CartItems" SET quantity= ${quantity} WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
+            this.query(queryString).then(resolve, reject);
+        });
+    }
+    _insertProductToCart(cartId, productId, quantity) {
+        return new Promise((resolve, reject) => {
+            let queryString = `INSERT INTO public."CartItems"("cartId", "productId", "quantity")VALUES (${cartId}, ${productId}, ${quantity})`;
+            this.query(queryString).then(resolve, reject);
+        });
+    }
+    addProduct(email, cartId, productId, quantity = 1) {
+        return new Promise((resolve, reject) => {
+            if (isNaN(quantity)) {
+                quantity = 1;
+            } else if (typeof quantity !== "number") {
+                quantity = Number(quantity);
             }
-            resolve();
+            this._getCartProduct(cartId, productId)
+                .then(data => {
+                    if (data) {
+                        this._updateCartProduct(
+                            cartId,
+                            productId,
+                            data.quantity + quantity
+                        )
+                            .then(resolve)
+                            .catch(() => {
+                                reject(message.error.UNKNOWN_DATABASE_ERROR);
+                            });
+                    } else {
+                        this._insertProductToCart(cartId, productId, quantity)
+                            .then(resolve)
+                            .catch(() => {
+                                reject(message.error.UNKNOWN_DATABASE_ERROR);
+                            });
+                    }
+                })
+                .catch(() => {
+                    reject(message.error.UNKNOWN_DATABASE_ERROR);
+                });
         });
     }
 }

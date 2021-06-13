@@ -1,18 +1,20 @@
 import dbHelper from "../database/dbHelper.js";
 import {message} from "../utils/constants.js";
-class Response {
-    constructor(data, error) {
-        this.data = data;
-        this.error = error;
-    }
-}
+import {
+    addProductImageFullPath,
+    addProductsImageFullPath
+} from "../utils/strings.js";
+import {Response} from "./shared.js";
+
 export default router => {
     router.get(`/api/products`, (req, res) => {
         const {productId} = req.query;
         dbHelper
             .getProducts(productId)
             .then(products => {
-                res.send(new Response(products, null));
+                res.send(
+                    new Response(addProductsImageFullPath(req, products), null)
+                );
             })
             .catch(error => {
                 res.send(new Response(null, error));
@@ -24,7 +26,12 @@ export default router => {
             .getProduct(id)
             .then(product => {
                 if (product) {
-                    res.send(new Response(product, null));
+                    res.send(
+                        new Response(
+                            addProductImageFullPath(req, product),
+                            null
+                        )
+                    );
                 } else {
                     res.send(
                         new Response(null, message.error.PRODUCT_DOESNT_EXISTS)
