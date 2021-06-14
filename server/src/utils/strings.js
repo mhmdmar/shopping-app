@@ -28,8 +28,18 @@ function addProductsImageFullPath(request, products) {
     }
     return products;
 }
+
+function validateNumber(input) {
+    if (isNaN(input)) {
+        input = 1;
+    } else if (typeof input !== "number") {
+        input = Number(input);
+    }
+    return input;
+}
 export {
     addUserImageFullPath,
     addProductImageFullPath,
-    addProductsImageFullPath
+    addProductsImageFullPath,
+    validateNumber
 };
