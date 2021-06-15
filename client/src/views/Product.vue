@@ -21,7 +21,7 @@
             <ProductCart
                 v-if="addToCartVisible"
                 @addToCartClicked="
-                    quantity => $emit('productAdded', id, quantity)
+                    quantity => $emit('productAddedToCart', id, quantity)
                 "
             ></ProductCart>
         </div>

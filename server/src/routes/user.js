@@ -43,9 +43,8 @@ export default router => {
         const {email, username, password} = req.body;
         dbHelper
             .addUser(email, username, password)
-            .then(user => {
-                const token = createToken(user);
-                res.send(new Response({user, token}, null));
+            .then(() => {
+                res.send(new Response(message.success.added, null));
             })
             .catch(error => {
                 res.send(new Response(null, error));

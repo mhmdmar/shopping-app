@@ -9,22 +9,24 @@ export const cartService = {
         return error ? null : data;
     },
     async addToCart(productId, cartId, quantity) {
-        const {error, data} = await API.post(`/cart`, {
+        const res = await API.post(`/cart`, {
             productId,
             quantity,
             cartId
         });
-        return {
-            data,
-            error
-        };
+        const {error, data} = res.data;
+        if (error) {
+            console.error(error);
+        }
+        return data;
     },
     async updateCartItem(productId, cartId, quantity) {
-        const {error, data} = await API.put(`/cart`, {
+        const res = await API.put(`/cart`, {
             productId,
             quantity,
             cartId
         });
+        const {error, data} = res.data;
         return {
             data,
             error

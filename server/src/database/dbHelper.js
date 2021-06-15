@@ -39,23 +39,42 @@ class DBHelper {
         });
     }
 
+    getOpenedUserCartId(email) {
+        // here we take into account that the user already exists and validated
+        return new Promise(async (resolve, reject) => {
+            const queryString = `SELECT "cartId" FROM public."Carts" WHERE "userId" ='${email}' AND "checkedOut" = false;`;
+            try {
+                const data = await this.query(queryString, true);
+                resolve(data?.cartId || null);
+            } catch (err) {
+                reject(message.error.UNKNOWN_DATABASE_ERROR);
+            }
+        });
+    }
+    /*
+    getOpenedCartItemsByUser(email) {
+        const queryString = `SELECT "Carts"."cartId", "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
+                                        WHERE "userId" ='${email}' AND "checkedOut" = false;`;
+    }
+    */
     getUser(email, password) {
         return new Promise(async (resolve, reject) => {
             let queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
             try {
                 const userData = await this.query(queryString, true);
                 if (userData !== null) {
-                    queryString = `SELECT "Carts"."cartId", "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
-                                        WHERE "userId" ='${email}' AND "checkedOut" = false;`;
-                    let items = await this.query(queryString);
-                    let cartId;
-                    if (!items) {
-                        // TODO createNewEmptyCart() and assign id to it;
-                        // cartId = newCartId
+                    let items = [];
+                    let cartId = await this.getOpenedUserCartId(email);
+                    if (!cartId) {
+                        await this.query(
+                            `INSERT INTO public."Carts"("userId", "dateCreated", "checkedOut") VALUES ( '${email}',  NOW(), false);`
+                        );
+                        cartId = await this.getOpenedUserCartId(email);
                     } else {
-                        // TODO validate only one checkedOutCart exists (cartId is unique in the array)
-                        cartId = items[0]?.cartId;
-                        items = items.map(({quantity, productId}) => {
+                        items = await this.query(
+                            `SELECT "productId","quantity" FROM "CartItems" WHERE "cartId" = ${cartId}`
+                        );
+                        items = items?.map(({quantity, productId}) => {
                             return {quantity, productId};
                         });
                     }
@@ -85,14 +104,7 @@ class DBHelper {
                             VALUES ('${email}','${username}','${password}','${DEFAULT_USER_PROFILE_PICTURE}')`;
             try {
                 await this.query(queryString);
-                resolve({
-                    email,
-                    username,
-                    cart: {
-                        items: []
-                    },
-                    profilePicture: DEFAULT_USER_PROFILE_PICTURE
-                });
+                resolve(message.success.added);
             } catch (err) {
                 if (err.code === "23505") {
                     reject(`email already exists`);

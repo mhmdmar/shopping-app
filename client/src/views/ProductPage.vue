@@ -8,7 +8,7 @@
             :price="product.price"
             :rating="product.rating"
             :addToCartVisible="isLoggedIn"
-            @productAdded="addProductToCart"
+            @productAddedToCart="addProductToCart"
         >
         </Product>
         <div v-else-if="!isLoading">
@@ -41,6 +41,9 @@
             ...mapMutations(["setIsLoading"]),
             addProductToCart(productId, quantity) {
                 if (isNil(this.user)) {
+                    console.error(
+                        "how did you manage to add a product to the cart when not logged in ?"
+                    );
                     return;
                 }
                 if (!this.cartId) {
