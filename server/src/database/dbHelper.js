@@ -1,19 +1,28 @@
 import dbConfig from "./config.js";
 import pg from "pg";
+
 const {Client} = pg;
 import {message} from "../utils/constants.js";
 import {validateNumber} from "../utils/strings.js";
+import tablesSchemes from "./tablesSchemes.js";
+
 const DEFAULT_USER_PROFILE_PICTURE = "/images/img_avatar.png";
+
 class DBHelper {
     constructor() {
         this.client = new Client(dbConfig);
     }
 
     connect() {
-        this.client.connect();
-    }
-    async close() {
-        this.client.close();
+        return new Promise(async (resolve, reject) => {
+            try {
+                this.client.connect();
+                await this.initDatabase();
+                resolve();
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 
     query(queryString, singleResult) {
@@ -21,13 +30,46 @@ class DBHelper {
             try {
                 const {rows} = await this.client.query(queryString);
                 resolve(
-                    rows.length > 0 ? (singleResult ? rows[0] : rows) : null
+                    rows?.length > 0 ? (singleResult ? rows[0] : rows) : null
                 );
             } catch (err) {
                 reject(err);
             }
         });
     }
+    fillScheme(tableSpace, owner, tableName, columns) {
+        return `CREATE TABLE IF NOT EXISTS ${tableName}(
+            ${columns.join(",\n")}
+         )
+        TABLESPACE ${tableSpace};
+        ALTER TABLE ${tableName}
+        OWNER to ${owner};  
+      `;
+    }
+
+    initDatabase() {
+        const {owner, tableSpace, tables} = tablesSchemes;
+        const promises = [];
+        tables.forEach(table => {
+            const query = this.fillScheme(
+                tableSpace,
+                owner,
+                table.name,
+                table.columns
+            );
+            promises.push(this.query(query));
+        });
+        return new Promise((resolve, reject) => {
+            Promise.all(promises)
+                .then(values => {
+                    resolve(values);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    }
+
     getUsers() {
         return new Promise(async (resolve, reject) => {
             const queryString = `SELECT email, username, password, "profilePicture" FROM public."Users";`;
@@ -51,12 +93,6 @@ class DBHelper {
             }
         });
     }
-    /*
-    getOpenedCartItemsByUser(email) {
-        const queryString = `SELECT "Carts"."cartId", "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
-                                        WHERE "userId" ='${email}' AND "checkedOut" = false;`;
-    }
-    */
     getUser(email, password) {
         return new Promise(async (resolve, reject) => {
             let queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
@@ -149,6 +185,7 @@ class DBHelper {
             }
         });
     }
+
     _getCartProduct(cartId, productId) {
         return new Promise(async (resolve, reject) => {
             const queryString = `SELECT "cartId", "productId", "quantity" FROM public."CartItems" 
@@ -160,6 +197,7 @@ class DBHelper {
             }
         });
     }
+
     getCart(email) {
         return new Promise(async (resolve, reject) => {
             const queryString = `SELECT "productId","quantity" FROM "Carts" INNER JOIN "CartItems" ON "Carts"."cartId" = "CartItems"."cartId"
@@ -171,6 +209,7 @@ class DBHelper {
             }
         });
     }
+
     _removeCartProduct(cartId, productId) {
         return new Promise(async (resolve, reject) => {
             const queryString = `DELETE from public."CartItems" WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
@@ -181,6 +220,7 @@ class DBHelper {
             }
         });
     }
+
     _updateCartProduct(cartId, productId, quantity) {
         return new Promise(async (resolve, reject) => {
             const queryString = `UPDATE public."CartItems" SET quantity= ${quantity} WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
@@ -266,5 +306,6 @@ class DBHelper {
         });
     }
 }
+
 const dbHelper = new DBHelper();
 export default dbHelper;

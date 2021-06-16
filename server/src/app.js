@@ -7,7 +7,12 @@ import path from "path";
 import initRoutes from "./routes/index.js";
 import {message} from "./utils/constants.js";
 import dbHelper from "./database/dbHelper.js";
-dbHelper.connect();
+try {
+    await dbHelper.connect();
+} catch (err) {
+    // TODO handle db error
+    throw err;
+}
 const staticFileMiddleware = express.static("public");
 const app = express();
 app.use(staticFileMiddleware);
