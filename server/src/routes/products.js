@@ -13,16 +13,7 @@ export default router => {
             .getProducts(productId)
             .then(products => {
                 res.send(
-                    new Response(
-                        addProductsImageFullPath(req, [
-                            ...products,
-                            ...products,
-                            ...products,
-                            ...products,
-                            ...products
-                        ]),
-                        null
-                    )
+                    new Response(addProductsImageFullPath(req, products), null)
                 );
             })
             .catch(error => {

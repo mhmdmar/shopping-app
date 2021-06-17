@@ -30,7 +30,7 @@
 
 <script>
     import {routesPaths} from "@/router/routes";
-    import EditableItem from "@/components/EditableItem/EditableItem";
+    import EditableItem from "@/components/EditableItem";
 
     export default {
         name: "ShoppingItem",
