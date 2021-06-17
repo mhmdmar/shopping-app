@@ -24,7 +24,7 @@
         },
         mixins: [utillyMixin, userMixin],
         mounted() {
-            /* set isLoading value to false on app start (due to the store persisting state */
+            /* set isLoading value to false on app start (due to the store persisting state) */
             this.setIsLoading(false);
         },
         methods: {
