@@ -1,5 +1,6 @@
 <template>
     <div class="products-table-container">
+        {{ totalPages }}
         <div v-if="numberOfProducts > 0">
             <div class="products-container">
                 <div
@@ -19,8 +20,9 @@
                 </div>
             </div>
             <b-pagination
+                v-if="numberOfProducts > perPage"
                 v-model="currentPage"
-                :total-rows="totalPages"
+                :total-rows="numberOfProducts"
                 :per-page="perPage"
                 :disabled="totalPages <= 1"
                 align="center"
@@ -48,7 +50,7 @@
         computed: {
             ...mapGetters(["products"]),
             totalPages() {
-                return Math.ceil(this.numberOfProducts / this.perRow);
+                return Math.ceil(this.numberOfProducts / this.perPage);
             },
             productsByPageNumber() {
                 let products = [];
@@ -71,7 +73,6 @@
             return {
                 productPath: routesPaths.product,
                 perPage: 11,
-                perRow: 3,
                 currentPage: 1
             };
         },
@@ -85,10 +86,9 @@
             this.setIsLoading(true);
             productsService
                 .getProducts()
-                .then(payload => {
-                    const {items} = payload;
-                    if (items) {
-                        this.setProducts(items);
+                .then(products => {
+                    if (Array.isArray(products)) {
+                        this.setProducts(products);
                     }
                 })
                 .catch(err => {
@@ -119,6 +119,7 @@
     .product-item {
         list-style: none;
         flex: 0 0 32.333333%;
+        max-height: 400px;
     }
     .pagination-wrapper {
         position: fixed;

@@ -7,6 +7,7 @@
         "serve:prod": "vue-cli-service serve --mode production",
         "build": "vue-cli-service build --dest ../server/public",
         "build:dev": "vue-cli-service build --mode development --dest ../server/public",
+        "build:dev-go": "vue-cli-service build --mode development --dest ../../GoServer/public",
         "test": "npm run test:unit",
         "test:unit": "vue-cli-service test:unit",
         "lint": "vue-cli-service lint"

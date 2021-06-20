@@ -8,22 +8,28 @@
             :price="product.price"
             :rating="product.rating"
             :addToCartVisible="isLoggedIn"
-            @productAdded="addProductToCart"
+            @productAddedToCart="addProductToCart"
         >
         </Product>
+        <div v-else-if="!isLoading">
+            <h3>Product with id {{ this.id }} is not found on the server</h3>
+        </div>
     </div>
 </template>
 
 <script>
     import Product from "@/views/Product";
     import {productsService} from "@/services/productsService";
-    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import {cartService} from "@/services/cartService";
     import {isNil} from "utilly";
     import {routesPaths} from "@/router/routes";
+    import {cartMixin} from "@/mixin/cart";
+
     export default {
         name: "ProductPage",
         components: {Product},
+        mixins: [cartMixin],
         data() {
             return {
                 product: null,
@@ -33,13 +39,24 @@
         },
         methods: {
             ...mapMutations(["setIsLoading"]),
-            ...mapActions(["addItemToCart"]),
-            setProduct() {
+            addProductToCart(productId, quantity) {
+                if (isNil(this.user)) {
+                    console.error(
+                        "how did you manage to add a product to the cart when not logged in ?"
+                    );
+                    return;
+                }
+                if (!this.cartId) {
+                    console.error("cartId is missing");
+                }
+                if (quantity < -1) {
+                    quantity = 1;
+                }
                 this.setIsLoading(true);
-                productsService
-                    .getProduct(this.id)
-                    .then(product => {
-                        this.product = product;
+                cartService
+                    .addToCart(productId, this.cartId, quantity)
+                    .then(() => {
+                        this.updateCart();
                     })
                     .catch(err => {
                         console.error(err);
@@ -48,23 +65,14 @@
                         this.setIsLoading(false);
                     });
             },
-            addProductToCart(id, quantity) {
-                if (isNil(this.user)) {
-                    return;
-                }
-
-                if (quantity < -1) {
-                    quantity = 1;
-                }
-
+            setProduct() {
                 this.setIsLoading(true);
-                cartService
-                    .addToCart(id, quantity)
-                    .then((/* cart */) => {
-                        this.addItemToCart({
-                            id,
-                            quantity
-                        });
+                productsService
+                    .getProduct(this.id)
+                    .then(product => {
+                        if (product !== null) {
+                            this.product = product;
+                        }
                     })
                     .catch(err => {
                         console.error(err);
@@ -85,7 +93,7 @@
             }
         },
         computed: {
-            ...mapGetters(["user", "isLoggedIn"])
+            ...mapGetters(["user", "isLoggedIn", "isLoading", "cartId"])
         }
     };
 </script>
@@ -96,6 +104,7 @@
         width: 50%;
         margin: 10% auto;
     }
+
     @media only screen and (max-width: 600px) {
         .product-page-container {
             width: 100%;

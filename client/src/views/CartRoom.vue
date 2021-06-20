@@ -11,6 +11,7 @@
             <div class="dropdown-divider"></div>
             <ShoppingList
                 :items="items"
+                @itemQuantityUpdated="productQuantityUpdated"
                 @itemSelectionChange="
                     (item, isSelected) => (item.selected = isSelected)
                 "
@@ -27,47 +28,41 @@
     import ShoppingList from "@/components/ShoppingList";
     import {mapGetters, mapMutations} from "vuex";
     import CheckoutWindow from "@/components/CheckoutWindow";
-    import {productsService} from "@/services/productsService";
+    import {cartMixin} from "@/mixin/cart";
+    import {cartService} from "@/services/cartService";
 
     export default {
         name: "CartRoom",
         components: {CheckoutWindow, ShoppingList},
+        mixins: [cartMixin],
         data() {
             return {
                 items: []
             };
         },
         mounted() {
-            this.updateItems();
+            this.updateCart();
         },
         methods: {
             ...mapMutations(["setIsLoading"]),
+            productQuantityUpdated(item, newQuantity) {
+                this.setIsLoading(true);
+                cartService
+                    .updateCartItem(item.id, this.cartId, newQuantity)
+                    .then(() => {
+                        this.updateCart();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false);
+                    });
+            },
             selectAllChecked(isSelected) {
                 this.items.forEach(item => {
                     item.selected = isSelected;
                 });
-            },
-            updateItems() {
-                if (this.cartItems.length > 0) {
-                    this.setIsLoading(true);
-                    productsService
-                        .getProductsFromList(this.cartItems)
-                        .then(items => {
-                            this.items =
-                                items?.map(item => {
-                                    return {
-                                        ...item,
-                                        selected: true
-                                    };
-                                }) || [];
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        })
-                        .finally(() => {
-                            this.setIsLoading(false);
-                        });
-                }
             }
         },
         watch: {
@@ -76,7 +71,7 @@
             }
         },
         computed: {
-            ...mapGetters(["cartItems", "cartSize", "isLoading"]),
+            ...mapGetters(["cartItems", "isLoading", "cartId"]),
             allItemsSelected() {
                 return this.items.every(item => item.selected);
             },

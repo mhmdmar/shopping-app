@@ -180,10 +180,21 @@
                             this.password
                         )
                         .then(payload => {
-                            const {error, token, user} = payload;
-                            if (user) {
-                                this.setUserSession({token, user});
-                                this.navigateToRoute(routesPaths.home);
+                            const {error} = payload;
+                            if (!error) {
+                                this.loginUser(
+                                    this.email,
+                                    this.password,
+                                    err => {
+                                        if (err) {
+                                            this.registerErrMessage = err;
+                                        } else {
+                                            this.navigateToRoute(
+                                                routesPaths.home
+                                            );
+                                        }
+                                    }
+                                );
                             } else {
                                 this.registerErrMessage = error;
                             }

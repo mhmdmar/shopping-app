@@ -1,16 +1,23 @@
 import dbHelper from "../database/dbHelper.js";
 import {message} from "../utils/constants.js";
+import {
+    addProductImageFullPath,
+    addProductsImageFullPath
+} from "../utils/strings.js";
+import {Response} from "./shared.js";
 
 export default router => {
     router.get(`/api/products`, (req, res) => {
-        const {id} = req.query;
+        const {productId} = req.query;
         dbHelper
-            .getProducts(id)
+            .getProducts(productId)
             .then(products => {
-                res.send({items: products});
+                res.send(
+                    new Response(addProductsImageFullPath(req, products), null)
+                );
             })
             .catch(error => {
-                res.send({error});
+                res.send(new Response(null, error));
             });
     });
     router.get(`/api/product`, (req, res) => {
@@ -19,17 +26,20 @@ export default router => {
             .getProduct(id)
             .then(product => {
                 if (product) {
-                    res.send(product);
+                    res.send(
+                        new Response(
+                            addProductImageFullPath(req, product),
+                            null
+                        )
+                    );
                 } else {
-                    res.send({
-                        error: message.error.PRODUCT_DOESNT_EXISTS
-                    });
+                    res.send(
+                        new Response(null, message.error.PRODUCT_DOESNT_EXISTS)
+                    );
                 }
             })
             .catch(error => {
-                res.send({
-                    error
-                });
+                res.send(new Response(null, error));
             });
     });
     return router;

@@ -1,5 +1,10 @@
 <template>
-    <div style="position:relative" ref="search-bar-container">
+    <div
+        style="position:relative"
+        ref="search-bar-container"
+        tabindex="-1"
+        v-focusout="onFocusOut"
+    >
         <input
             class="form-control"
             type="search"
@@ -9,7 +14,6 @@
             @keydown.up="up"
             @input="change"
             @focus="change"
-            @blur="onBlur($event)"
         />
         <ul
             v-if="autoCompleteEnabled"
@@ -31,10 +35,11 @@
 </template>
 
 <script>
-    import fuzzysearch from "fuzzysearch";
-
+    import fuzzySearch from "fuzzysearch";
+    import focusout from "@/directives/focusout";
     export default {
         name: "SearchBar",
+        directives: {focusout},
         props: {
             autoCompleteEnabled: {
                 type: Boolean,
@@ -77,20 +82,14 @@
         },
         methods: {
             search(word, source) {
-                return fuzzysearch(source, word);
+                return fuzzySearch(source, word);
             },
-            onBlur() {
-                // TODO remove setTimeout and handle closing the list in a better
-                setTimeout(() => {
-                    this.open = false;
-                }, 100);
+            onFocusOut() {
+                this.open = false;
             },
             enter() {
                 if (this.autoCompleteEnabled && this.open) {
                     this.suggestionChosen();
-                } else {
-                    // TODO implement searchClicked listener
-                    this.$emit("searchClicked", this.searchQuery);
                 }
             },
             suggestionChosen(index = this.current) {
