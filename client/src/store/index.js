@@ -5,10 +5,20 @@ import global from "@/store/modules/global.js";
 import cartModule from "@/store/modules/cart";
 import products from "@/store/modules/products";
 import createPersistedState from "vuex-persistedstate";
+import SecureLS from "secure-ls";
+const ls = new SecureLS({isCompression: false});
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    plugins: [createPersistedState()],
+    plugins: [
+        createPersistedState({
+            storage: {
+                getItem: key => ls.get(key),
+                setItem: (key, value) => ls.set(key, value),
+                removeItem: key => ls.remove(key)
+            }
+        })
+    ],
     modules: {
         user,
         global,
