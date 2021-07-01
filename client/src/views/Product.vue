@@ -31,6 +31,7 @@
 <script>
     import StarRating from "vue-star-rating";
     import ProductCart from "@/components/ProductCart";
+
     export default {
         name: "Product",
         components: {StarRating, ProductCart},
@@ -68,28 +69,34 @@
 
 <style scoped lang="scss">
     @import "../styles/sharedStyles";
+
     .product-container {
         border: 1px solid darkgray;
         width: 100%;
         height: 100%;
     }
+
     .product-body,
     .product-header {
         align-items: center;
     }
+
     .product-body {
         display: flex;
         flex-direction: column;
         font-size: 22px;
     }
+
     .price {
         line-height: 1 !important;
         color: #cc1c39 !important;
     }
+
     img {
         height: 250px;
         width: 100%;
     }
+
     .product-title {
         @include ellipsis;
         text-align: center;

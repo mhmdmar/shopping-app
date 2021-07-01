@@ -21,7 +21,7 @@ export default router => {
             dbHelper
                 .addProductToCart(userEmail, cartId, productId, quantity)
                 .then(() => {
-                    res.send(new Response(message.success.added, null));
+                    res.send(new Response(message.success.ADDED, null));
                 })
                 .catch(err => {
                     res.send(new Response(null, err));
@@ -44,7 +44,7 @@ export default router => {
             dbHelper
                 .updateProductToCart(userEmail, cartId, productId, quantity)
                 .then(() => {
-                    res.send(new Response(message.success.updated, null));
+                    res.send(new Response(message.success.UPDATED, null));
                 })
                 .catch(err => {
                     res.send(new Response(null, err));

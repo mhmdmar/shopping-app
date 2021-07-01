@@ -58,5 +58,42 @@ export const userService = {
                 error
             };
         }
+    },
+    async restorePassword(email) {
+        try {
+            const res = await API.get(`/restore_password`, {
+                params: {
+                    email
+                }
+            });
+            const {error, data} = res.data;
+            return {
+                data,
+                error
+            };
+        } catch (error) {
+            return {
+                error
+            };
+        }
+    },
+    async changePassword(email, newPassword) {
+        try {
+            const res = await API.put(`/user`, {
+                params: {
+                    email,
+                    password: newPassword
+                }
+            });
+            const {error, data} = res.data;
+            return {
+                data,
+                error
+            };
+        } catch (error) {
+            return {
+                error
+            };
+        }
     }
 };

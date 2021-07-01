@@ -5,6 +5,8 @@ export const routesPaths = {
     about: "/about",
     login: "/login",
     register: "/register",
+    restorePassword: "/restorePassword",
+    resetPassword: "/resetPassword",
     user: "/user",
     cartRoom: "/cartRoom",
     product: "/product",
@@ -33,7 +35,7 @@ export const routes = [
             hidden: true
         },
         component: () =>
-            import(/* webpackChunkName: "login" */ "@/views/Login.vue")
+            import(/* webpackChunkName: "login" */ "@/views/Forms/Login.vue")
     },
     {
         path: routesPaths.register,
@@ -42,7 +44,20 @@ export const routes = [
             hidden: true
         },
         component: () =>
-            import(/* webpackChunkName: "login" */ "@/views/Register.vue")
+            import(
+                /* webpackChunkName: "register" */ "@/views/Forms/Register.vue"
+            )
+    },
+    {
+        path: routesPaths.restorePassword,
+        name: "RestorePassword",
+        meta: {
+            hidden: true
+        },
+        component: () =>
+            import(
+                /* webpackChunkName: "forgetPassword" */ "@/views/Forms/RestorePassword.vue"
+            )
     },
     {
         path: routesPaths.user,
@@ -55,13 +70,27 @@ export const routes = [
             import(/* webpackChunkName: "user" */ "@/views/User.vue")
     },
     {
+        path: routesPaths.resetPassword,
+        name: "ResetPassword",
+        meta: {
+            requiredAuth: true,
+            hidden: true
+        },
+        component: () =>
+            import(
+                /* webpackChunkName: "resetPassword" */ "@/views/Forms/ResetPassword.vue"
+            )
+    },
+    {
         path: routesPaths.product + "/:id",
         name: "Product",
         meta: {
             hidden: true
         },
         component: () =>
-            import(/* webpackChunkName: "user" */ "@/views/ProductPage.vue")
+            import(
+                /* webpackChunkName: "productPage" */ "@/views/ProductPage.vue"
+            )
     },
     {
         path: routesPaths.cartRoom,
@@ -71,7 +100,7 @@ export const routes = [
             hidden: true
         },
         component: () =>
-            import(/* webpackChunkName: "user" */ "@/views/CartRoom.vue")
+            import(/* webpackChunkName: "cartRoom" */ "@/views/CartRoom.vue")
     },
     {
         path: routesPaths.termsAndCondition,
@@ -81,7 +110,7 @@ export const routes = [
         },
         component: () =>
             import(
-                /* webpackChunkName: "user" */ "@/views/TermsAndConditions.vue"
+                /* webpackChunkName: "termsAndConditions" */ "@/views/TermsAndConditions.vue"
             )
     },
     {

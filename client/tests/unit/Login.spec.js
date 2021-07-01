@@ -1,5 +1,5 @@
 import wrapComponent from "./shared/wrapper";
-import Login from "@/views/Login.vue";
+import Login from "@/views/Forms/Login.vue";
 
 describe("Login.vue", () => {
     let wrapper;

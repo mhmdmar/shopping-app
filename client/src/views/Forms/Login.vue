@@ -40,7 +40,10 @@
                     {{ loginErrMsg }}
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col-12">
+                <router-link :to="restorePassword">Forgot Password</router-link>
+            </div>
+            <div class="col-12">
                 <router-link :to="registerPath">Register</router-link>
             </div>
         </form>
@@ -63,7 +66,8 @@
                 password: "",
                 loginAttempts: 0,
                 loginErrMsg: "",
-                registerPath: routesPaths.register
+                registerPath: routesPaths.register,
+                restorePassword: routesPaths.restorePassword
             };
         },
         computed: {

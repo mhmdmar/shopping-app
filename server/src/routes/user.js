@@ -4,6 +4,7 @@ import {createToken /*,validateToken*/} from "../utils/jsonTokenHandler.js";
 import {addUserImageFullPath} from "../utils/strings.js";
 import {Response} from "./shared.js";
 import {message} from "../utils/constants.js";
+import {sendPasswordToUser} from "../utils/Mailer/mailer.js";
 export default router => {
     router.get(`/api/users`, (req, res) => {
         dbHelper.getUsers().then(users => {
@@ -44,11 +45,52 @@ export default router => {
         dbHelper
             .addUser(email, username, password)
             .then(() => {
-                res.send(new Response(message.success.added, null));
+                res.send(new Response(message.success.ADDED, null));
             })
             .catch(error => {
                 res.send(new Response(null, error));
             });
+    });
+
+    router.get(`/api/restore_password`, async (req, res) => {
+        const {email} = req.query;
+        if (!email) {
+            res.send(
+                new Response(null, message.error.MISSING_EMAIL_FROM_Query)
+            );
+        } else {
+            dbHelper
+                .getPasswordByEmail(email)
+                .then(password => {
+                    if (password) {
+                        sendPasswordToUser(email, password)
+                            .then(() => {
+                                res.send(
+                                    new Response(
+                                        message.success.RESTORE_PASSWORD,
+                                        null
+                                    )
+                                );
+                            })
+                            .catch(err => {
+                                res.send(new Response(null, err));
+                            });
+                    } else {
+                        res.send(
+                            new Response(
+                                null,
+                                message.error.EMAIL_DOESNT_EXISTS
+                            )
+                        );
+                    }
+                })
+                .catch(error => {
+                    res.send(new Response(null, error));
+                });
+        }
+    });
+    router.put(`/api/user`, async (req, res) => {
+        res.send(new Response(null, "NOT IMPLEMENTED YET"));
     });
     return router;
 };
