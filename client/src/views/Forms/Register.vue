@@ -92,6 +92,7 @@
     import {mapActions, mapGetters} from "vuex";
     import {userMixin} from "@/mixin/user";
     import {routerUtil} from "@/mixin/routerUtil";
+    import {isValidEmail} from "@/utils/strings/formValidator";
 
     export default {
         name: "Register",
@@ -119,8 +120,8 @@
             },
             validEmail() {
                 return this.getValidateObject(() => {
-                    if (!this.email.includes("@")) {
-                        return "email isn't valid";
+                    if (!isValidEmail(this.email)) {
+                        return "invalid email address";
                     }
                 });
             },

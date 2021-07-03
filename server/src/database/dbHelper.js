@@ -154,7 +154,7 @@ class DBHelper {
                 resolve(message.success.ADDED);
             } catch (err) {
                 if (err.code === "23505") {
-                    reject(`email already exists`);
+                    reject(message.error.EMAIL_ALREADY_EXISTS);
                 } else {
                     reject(message.error.UNKNOWN_DATABASE_ERROR);
                 }
@@ -162,6 +162,17 @@ class DBHelper {
         });
     }
 
+    updateUserPassword(email, password) {
+        return new Promise(async (resolve, reject) => {
+            const queryString = `UPDATE public."Users" SET password = '${password}' WHERE "email" = '${email}';`;
+            try {
+                await this.query(queryString);
+                resolve(message.success.ADDED);
+            } catch (err) {
+                reject(message.error.UNKNOWN_DATABASE_ERROR);
+            }
+        });
+    }
     getProducts(productId) {
         return new Promise(async (resolve, reject) => {
             let queryString;

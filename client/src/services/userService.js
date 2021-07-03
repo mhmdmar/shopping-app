@@ -15,11 +15,14 @@ export const userService = {
             };
         }
     },
-    async login(username, password) {
+    async login(email, password) {
         try {
-            const res = await API.get(
-                `/user?email=${username}&password=${password}`
-            );
+            const res = await API.get(`/user`, {
+                params: {
+                    email,
+                    password
+                }
+            });
             const {error, data} = res.data;
             let user = null,
                 token = null,
@@ -61,7 +64,7 @@ export const userService = {
     },
     async restorePassword(email) {
         try {
-            const res = await API.get(`/restore_password`, {
+            const res = await API.get(`/restore-password`, {
                 params: {
                     email
                 }
@@ -77,13 +80,11 @@ export const userService = {
             };
         }
     },
-    async changePassword(email, newPassword) {
+    async changePassword(email, password) {
         try {
-            const res = await API.put(`/user`, {
-                params: {
-                    email,
-                    password: newPassword
-                }
+            const res = await API.put(`/reset-password`, {
+                email,
+                password
             });
             const {error, data} = res.data;
             return {

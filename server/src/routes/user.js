@@ -52,45 +52,78 @@ export default router => {
             });
     });
 
-    router.get(`/api/restore_password`, async (req, res) => {
-        const {email} = req.query;
+    router.put(`/api/reset-password`, async (req, res) => {
+        const {email, password} = req.body;
         if (!email) {
-            res.send(
-                new Response(null, message.error.MISSING_EMAIL_FROM_Query)
-            );
-        } else {
-            dbHelper
-                .getPasswordByEmail(email)
-                .then(password => {
-                    if (password) {
-                        sendPasswordToUser(email, password)
-                            .then(() => {
-                                res.send(
-                                    new Response(
-                                        message.success.RESTORE_PASSWORD,
-                                        null
-                                    )
-                                );
-                            })
-                            .catch(err => {
-                                res.send(new Response(null, err));
-                            });
-                    } else {
+            res.send(new Response(null, message.error.INVALID_REQUEST_BODY));
+            return;
+        }
+        dbHelper
+            .getPasswordByEmail(email)
+            .then(oldPassword => {
+                if (oldPassword) {
+                    if (oldPassword === password) {
                         res.send(
                             new Response(
                                 null,
-                                message.error.EMAIL_DOESNT_EXISTS
+                                message.error.PASSWORD_NEW_MATCH_OLD
                             )
                         );
+                    } else {
+                        dbHelper
+                            .updateUserPassword(email, password)
+                            .then(() => {
+                                res.send(
+                                    new Response(message.success.UPDATED, null)
+                                );
+                            })
+                            .catch(error => {
+                                res.send(new Response(null, error));
+                            });
                     }
-                })
-                .catch(error => {
-                    res.send(new Response(null, error));
-                });
+                } else {
+                    res.send(
+                        new Response(null, message.error.EMAIL_DOESNT_EXISTS)
+                    );
+                }
+            })
+            .catch(error => {
+                res.send(new Response(null, error));
+            });
+    });
+
+    router.get(`/api/restore-password`, async (req, res) => {
+        const {email} = req.query;
+        if (!email) {
+            res.send(new Response(null, message.error.INVALID_REQUEST_BODY));
+            return;
         }
+        dbHelper
+            .getPasswordByEmail(email)
+            .then(password => {
+                if (password) {
+                    sendPasswordToUser(email, password)
+                        .then(() => {
+                            res.send(
+                                new Response(
+                                    message.success.RESTORE_PASSWORD,
+                                    null
+                                )
+                            );
+                        })
+                        .catch(error => {
+                            res.send(new Response(null, error));
+                        });
+                } else {
+                    res.send(
+                        new Response(null, message.error.EMAIL_DOESNT_EXISTS)
+                    );
+                }
+            })
+            .catch(error => {
+                res.send(new Response(null, error));
+            });
     });
-    router.put(`/api/user`, async (req, res) => {
-        res.send(new Response(null, "NOT IMPLEMENTED YET"));
-    });
+
     return router;
 };

@@ -3,7 +3,9 @@ import API from "@/services/API";
 export const cartService = {
     async getCartItems(cartId) {
         const res = await API.get(`/cart`, {
-            cartId
+            params: {
+                cartId
+            }
         });
         const {error, data} = res.data;
         return error ? null : data;

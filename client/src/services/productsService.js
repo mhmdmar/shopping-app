@@ -15,8 +15,11 @@ export const productsService = {
             return [];
         }
         const idList = productsList.map(product => product.productId);
-        const idQuery = `productId=${idList.join("&productId=")}`;
-        const res = await API.get(`/products?${idQuery}`);
+        const res = await API.get(`/products`, {
+            params: {
+                productId: idList
+            }
+        });
         const {error, data} = res.data;
         if (error) {
             return [];
@@ -33,7 +36,11 @@ export const productsService = {
         );
     },
     async getProduct(productId) {
-        let res = await API.get(`/product?id=${productId}`);
+        let res = await API.get(`/product`, {
+            params: {
+                id: productId
+            }
+        });
         const {error, data} = res.data;
         if (error) {
             return null;

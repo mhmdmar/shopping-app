@@ -10,9 +10,10 @@ const message = {
         UNAUTHORIZED: "unauthorized request",
         UPDATE_INVALID_ITEM:
             "cannot update item that doesn't exist in the database",
-        MISSING_EMAIL_FROM_Query: "email is missing from the request query",
         SENDING_EMAIL_ERROR:
-            "encountered an error while sending an email, please try again later"
+            "encountered an error while sending an email, please try again later",
+        EMAIL_ALREADY_EXISTS: "email already exists",
+        PASSWORD_NEW_MATCH_OLD: "new password can not be the old password!"
     },
     success: {
         ADDED: "added successfully",

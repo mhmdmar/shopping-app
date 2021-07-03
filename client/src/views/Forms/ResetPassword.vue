@@ -2,7 +2,9 @@
     <div class="container">
         <form novalidate class="g-3 needs-validation" @onsubmit.prevent>
             <div class="col-12">
-                <label for="password" class="form-label"><b>Password</b></label>
+                <label for="password" class="form-label"
+                    ><b>New Password</b></label
+                >
                 <input
                     type="password"
                     class="form-control"
@@ -67,8 +69,8 @@
         mixins: [routerUtil],
         data() {
             return {
-                password: "",
-                repeatPassword: "",
+                password: null,
+                repeatPassword: null,
                 resetPasswordErrMessage: "",
                 termsAndConditionChecked: false,
                 loginPath: routesPaths.login,
@@ -92,7 +94,10 @@
             },
             isFormValid() {
                 return (
-                    !this.invalidRepeatPasswordMsg && !this.invalidPasswordMsg
+                    !this.invalidRepeatPasswordMsg &&
+                    !this.invalidPasswordMsg &&
+                    this.password !== null &&
+                    this.repeatPassword !== null
                 );
             }
         },
@@ -104,7 +109,7 @@
                 this.resetPasswordAttempts++;
                 if (this.password !== this.repeatPassword) {
                     this.resetPasswordErrMessage =
-                        "The 2 passwords doesn't match";
+                        "The 2 passwords don't match";
                 } else {
                     userService
                         .changePassword(this.user.email, this.password)
@@ -112,7 +117,7 @@
                             if (error) {
                                 this.resetPasswordErrMessage = error;
                             } else {
-                                this.navigateToRoute(routesPaths.login);
+                                this.navigateToRoute(routesPaths.user);
                             }
                         })
                         .catch(err => {

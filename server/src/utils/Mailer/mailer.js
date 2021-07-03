@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import authConfig from "./authConfig.js";
 import {message} from "../constants.js";
 
+const {email, password} = authConfig;
 function _sendEmail(targetEmail, subject, text, cc) {
     return new Promise(async (resolve, reject) => {
         const transporter = nodemailer.createTransport({
@@ -11,13 +12,13 @@ function _sendEmail(targetEmail, subject, text, cc) {
             */
             service: "gmail",
             auth: {
-                user: authConfig.email,
-                pass: authConfig.password
+                user: email,
+                pass: password
             }
         });
         try {
             const messageInfo = await transporter.sendMail({
-                from: authConfig.email,
+                from: email,
                 to: targetEmail,
                 cc,
                 subject,
