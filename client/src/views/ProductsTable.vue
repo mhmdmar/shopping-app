@@ -1,6 +1,5 @@
 <template>
     <div class="products-table-container">
-        {{ totalPages }}
         <div v-if="numberOfProducts > 0">
             <div class="products-container">
                 <div

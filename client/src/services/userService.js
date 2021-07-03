@@ -15,11 +15,14 @@ export const userService = {
             };
         }
     },
-    async login(username, password) {
+    async login(email, password) {
         try {
-            const res = await API.get(
-                `/user?email=${username}&password=${password}`
-            );
+            const res = await API.get(`/user`, {
+                params: {
+                    email,
+                    password
+                }
+            });
             const {error, data} = res.data;
             let user = null,
                 token = null,
@@ -46,6 +49,41 @@ export const userService = {
             const res = await API.post(`/user`, {
                 email,
                 username,
+                password
+            });
+            const {error, data} = res.data;
+            return {
+                data,
+                error
+            };
+        } catch (error) {
+            return {
+                error
+            };
+        }
+    },
+    async restorePassword(email) {
+        try {
+            const res = await API.get(`/restore-password`, {
+                params: {
+                    email
+                }
+            });
+            const {error, data} = res.data;
+            return {
+                data,
+                error
+            };
+        } catch (error) {
+            return {
+                error
+            };
+        }
+    },
+    async changePassword(email, password) {
+        try {
+            const res = await API.put(`/reset-password`, {
+                email,
                 password
             });
             const {error, data} = res.data;

@@ -6,9 +6,7 @@ import {mapActions, mapMutations} from "vuex";
 export const userMixin = {
     mounted() {
         if (!isNil(this.user)) {
-            this.$router.push(routesPaths.user).catch(err => {
-                console.error(err);
-            });
+            this.navigateToRoute(routesPaths.user);
         }
     },
     methods: {

@@ -9,3 +9,5 @@ public
 *.njsproj
 *.sln
 *.sw*
+
+src/utils/Mailer/authConfig.js

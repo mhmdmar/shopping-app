@@ -93,9 +93,20 @@ class DBHelper {
             }
         });
     }
+    getPasswordByEmail(email) {
+        return new Promise(async (resolve, reject) => {
+            const queryString = `SELECT password FROM public."Users" WHERE email = '${email}'`;
+            try {
+                const data = await this.query(queryString, true);
+                resolve(data?.password || null);
+            } catch (err) {
+                reject(message.error.UNKNOWN_DATABASE_ERROR);
+            }
+        });
+    }
     getUser(email, password) {
         return new Promise(async (resolve, reject) => {
-            let queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
+            const queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
             try {
                 const userData = await this.query(queryString, true);
                 if (userData !== null) {
@@ -140,10 +151,10 @@ class DBHelper {
                             VALUES ('${email}','${username}','${password}','${DEFAULT_USER_PROFILE_PICTURE}')`;
             try {
                 await this.query(queryString);
-                resolve(message.success.added);
+                resolve(message.success.ADDED);
             } catch (err) {
                 if (err.code === "23505") {
-                    reject(`email already exists`);
+                    reject(message.error.EMAIL_ALREADY_EXISTS);
                 } else {
                     reject(message.error.UNKNOWN_DATABASE_ERROR);
                 }
@@ -151,6 +162,17 @@ class DBHelper {
         });
     }
 
+    updateUserPassword(email, password) {
+        return new Promise(async (resolve, reject) => {
+            const queryString = `UPDATE public."Users" SET password = '${password}' WHERE "email" = '${email}';`;
+            try {
+                await this.query(queryString);
+                resolve(message.success.ADDED);
+            } catch (err) {
+                reject(message.error.UNKNOWN_DATABASE_ERROR);
+            }
+        });
+    }
     getProducts(productId) {
         return new Promise(async (resolve, reject) => {
             let queryString;
