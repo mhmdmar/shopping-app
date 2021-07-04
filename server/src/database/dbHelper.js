@@ -1,11 +1,10 @@
 import dbConfig from "./config.js";
 import pg from "pg";
-
-const {Client} = pg;
 import {message} from "../utils/constants.js";
 import {validateNumber} from "../utils/strings.js";
 import tablesSchemes from "./tablesSchemes.js";
 
+const {Client} = pg;
 const DEFAULT_USER_PROFILE_PICTURE = "/images/img_avatar.png";
 
 class DBHelper {
@@ -13,10 +12,13 @@ class DBHelper {
         this.client = new Client(dbConfig);
     }
 
-    connect() {
+    _connect() {
+        if (this.client._connected) {
+            return;
+        }
         return new Promise(async (resolve, reject) => {
             try {
-                this.client.connect();
+                await this.client.connect();
                 await this.initDatabase();
                 resolve();
             } catch (err) {
@@ -28,6 +30,7 @@ class DBHelper {
     query(queryString, singleResult) {
         return new Promise(async (resolve, reject) => {
             try {
+                await this._connect()
                 const {rows} = await this.client.query(queryString);
                 resolve(
                     rows?.length > 0 ? (singleResult ? rows[0] : rows) : null
@@ -37,6 +40,7 @@ class DBHelper {
             }
         });
     }
+
     fillScheme(tableSpace, owner, tableName, columns) {
         return `CREATE TABLE IF NOT EXISTS ${tableName}(
             ${columns.join(",\n")}
@@ -93,6 +97,7 @@ class DBHelper {
             }
         });
     }
+
     getPasswordByEmail(email) {
         return new Promise(async (resolve, reject) => {
             const queryString = `SELECT password FROM public."Users" WHERE email = '${email}'`;
@@ -104,6 +109,7 @@ class DBHelper {
             }
         });
     }
+
     getUser(email, password) {
         return new Promise(async (resolve, reject) => {
             const queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
@@ -173,6 +179,7 @@ class DBHelper {
             }
         });
     }
+
     getProducts(productId) {
         return new Promise(async (resolve, reject) => {
             let queryString;

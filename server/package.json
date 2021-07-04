@@ -10,7 +10,7 @@
         "start:watch": "nodemon server.js",
         "start:dev:watch": "set NODE_ENV=development&& npm run start:watch",
         "start:prod:watch": "set NODE_ENV=production&& npm run start:watch",
-        "start": "node server.js",
+        "start": "nodemon server.js",
         "test": "exit 0"
     },
     "prettier": {
