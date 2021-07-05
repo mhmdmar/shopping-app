@@ -16,7 +16,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static("public"));
 app.use(express.static(path.join("src", "assets")));
-app.use(cors())
+app.use(cors());
 app.use(initRoutes());
 
 export default app;

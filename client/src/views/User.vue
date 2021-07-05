@@ -12,16 +12,27 @@
             </div>
             <div>
                 <router-link :to="resetPasswordPath"
-                    >Reset Password</router-link
-                >
+                    >Reset Password
+                </router-link>
+            </div>
+            <div>
+                <label>Select your profile picture:</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    @change="uploadImage($event)"
+                    id="profilePicture"
+                    name="profilePicture"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import {routesPaths} from "@/router/routes";
+    import {userService} from "@/services/userService";
 
     export default {
         name: "User.vue",
@@ -32,6 +43,30 @@
         },
         computed: {
             ...mapGetters(["user"])
+        },
+        methods: {
+            ...mapMutations(["setIsLoading"]),
+            uploadImage(event) {
+                this.setIsLoading(true);
+                userService
+                    .uploadProfilePicture(
+                        this.user.email,
+                        event.target.files[0]
+                    )
+                    .then(({res, error}) => {
+                        if (error) {
+                            console.error(error);
+                        } else {
+                            console.log(res);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false);
+                    });
+            }
         }
     };
 </script>
@@ -42,6 +77,7 @@
         flex-direction: column;
         gap: 5px;
     }
+
     .info-title {
         font-weight: bold;
         margin-right: 5px;

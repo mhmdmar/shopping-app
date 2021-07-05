@@ -5,6 +5,8 @@ import {addUserImageFullPath} from "../utils/strings.js";
 import {Response} from "./shared.js";
 import {message} from "../utils/constants.js";
 import {sendPasswordToUser} from "../utils/Mailer/mailer.js";
+import uploadSingleFile from "../middleware/imageUpload.js";
+
 export default router => {
     router.get(`/api/users`, (req, res) => {
         dbHelper.getUsers().then(users => {
@@ -124,6 +126,14 @@ export default router => {
                 res.send(new Response(null, error));
             });
     });
-
+    router.post(
+        `/api/change-profile-image`,
+        uploadSingleFile,
+        async (req, res) => {
+            res.send({
+                file: req.file
+            });
+        }
+    );
     return router;
 };
