@@ -108,7 +108,6 @@ export const userService = {
                 }
             });
             const {error, data} = res.data;
-            console.log(res);
             return {
                 data,
                 error

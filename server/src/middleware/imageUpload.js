@@ -15,6 +15,4 @@ const upload = multer({
         fileSize: 5000000
     }
 });
-const uploadSingleFile = upload.single("file");
-
-export default uploadSingleFile;
+export default upload.single("file");

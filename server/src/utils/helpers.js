@@ -6,4 +6,8 @@ const imageFilter = function (req, file, cb) {
     }
     cb(null, true);
 };
-export {imageFilter};
+
+const getFullUrl = function (req) {
+    return req.protocol + "://" + req.get("host");
+};
+export {imageFilter, getFullUrl};

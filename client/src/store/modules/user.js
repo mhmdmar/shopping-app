@@ -1,4 +1,5 @@
 import API from "@/services/API";
+import {BASE_URI} from "@/services/services";
 
 export default {
     state: {
@@ -8,6 +9,11 @@ export default {
     mutations: {
         setUser(state, user) {
             state._user = user;
+        },
+        setUserField(state, {key, value}) {
+            if (state._user) {
+                state._user[key] = value;
+            }
         },
         setUserToken(state, userToken) {
             state._userToken = userToken;

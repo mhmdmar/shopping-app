@@ -45,7 +45,7 @@
             ...mapGetters(["user"])
         },
         methods: {
-            ...mapMutations(["setIsLoading"]),
+            ...mapMutations(["setIsLoading", "setUserField"]),
             uploadImage(event) {
                 this.setIsLoading(true);
                 userService
@@ -53,11 +53,14 @@
                         this.user.email,
                         event.target.files[0]
                     )
-                    .then(({res, error}) => {
+                    .then(({data, error}) => {
                         if (error) {
                             console.error(error);
                         } else {
-                            console.log(res);
+                            this.setUserField({
+                                key: "profilePicture",
+                                value: data
+                            });
                         }
                     })
                     .catch(err => {
