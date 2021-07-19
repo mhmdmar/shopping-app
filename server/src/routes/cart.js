@@ -23,8 +23,8 @@ export default router => {
                 .then(() => {
                     res.send(new Response(message.success.ADDED, null));
                 })
-                .catch(err => {
-                    res.send(new Response(null, err));
+                .catch(error => {
+                    res.send(new Response(null, error));
                 });
         } else {
             if (!userEmail) {
@@ -46,8 +46,8 @@ export default router => {
                 .then(() => {
                     res.send(new Response(message.success.UPDATED, null));
                 })
-                .catch(err => {
-                    res.send(new Response(null, err));
+                .catch(error => {
+                    res.send(new Response(null, error));
                 });
         } else {
             if (!userEmail) {

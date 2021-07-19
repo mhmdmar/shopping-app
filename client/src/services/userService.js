@@ -96,5 +96,26 @@ export const userService = {
                 error
             };
         }
+    },
+    async uploadProfilePicture(email, pictureData) {
+        try {
+            const requestData = new FormData();
+            requestData.append("name", email + "-profile");
+            requestData.append("file", pictureData);
+            const res = await API.post(`/change-profile-image`, requestData, {
+                header: {
+                    "Content-Type": "image/png"
+                }
+            });
+            const {error, data} = res.data;
+            return {
+                data,
+                error
+            };
+        } catch (error) {
+            return {
+                error
+            };
+        }
     }
 };

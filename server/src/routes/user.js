@@ -5,6 +5,10 @@ import {addUserImageFullPath} from "../utils/strings.js";
 import {Response} from "./shared.js";
 import {message} from "../utils/constants.js";
 import {sendPasswordToUser} from "../utils/Mailer/mailer.js";
+import uploadSingleFile from "../middleware/imageUpload.js";
+import authenticateJWT from "../middleware/authentication.js";
+import {getFullUrl} from "../utils/helpers.js";
+
 export default router => {
     router.get(`/api/users`, (req, res) => {
         dbHelper.getUsers().then(users => {
@@ -124,6 +128,29 @@ export default router => {
                 res.send(new Response(null, error));
             });
     });
-
+    router.post(
+        `/api/change-profile-image`,
+        [authenticateJWT, uploadSingleFile],
+        async (req, res) => {
+            const {userEmail} = req;
+            if (req.file) {
+                const dbPath = `${getFullUrl(req)}/uploads/${
+                    req.file.filename
+                }`;
+                dbHelper
+                    .updateUserProfilePicture(userEmail, dbPath)
+                    .then(() => {
+                        res.send(new Response(dbPath, null));
+                    })
+                    .catch(error => {
+                        res.send(new Response(null, error));
+                    });
+            } else {
+                res.send(
+                    new Response(null, message.error.UNKNOWN_DATABASE_ERROR)
+                );
+            }
+        }
+    );
     return router;
 };

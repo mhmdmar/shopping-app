@@ -1,11 +1,10 @@
 import dbConfig from "./config.js";
 import pg from "pg";
-
-const {Client} = pg;
 import {message} from "../utils/constants.js";
 import {validateNumber} from "../utils/strings.js";
 import tablesSchemes from "./tablesSchemes.js";
 
+const {Client} = pg;
 const DEFAULT_USER_PROFILE_PICTURE = "/images/img_avatar.png";
 
 class DBHelper {
@@ -13,10 +12,13 @@ class DBHelper {
         this.client = new Client(dbConfig);
     }
 
-    connect() {
+    _connect() {
+        if (this.client._connected) {
+            return;
+        }
         return new Promise(async (resolve, reject) => {
             try {
-                this.client.connect();
+                await this.client.connect();
                 await this.initDatabase();
                 resolve();
             } catch (err) {
@@ -28,6 +30,7 @@ class DBHelper {
     query(queryString, singleResult) {
         return new Promise(async (resolve, reject) => {
             try {
+                await this._connect();
                 const {rows} = await this.client.query(queryString);
                 resolve(
                     rows?.length > 0 ? (singleResult ? rows[0] : rows) : null
@@ -37,6 +40,7 @@ class DBHelper {
             }
         });
     }
+
     fillScheme(tableSpace, owner, tableName, columns) {
         return `CREATE TABLE IF NOT EXISTS ${tableName}(
             ${columns.join(",\n")}
@@ -72,7 +76,7 @@ class DBHelper {
 
     getUsers() {
         return new Promise(async (resolve, reject) => {
-            const queryString = `SELECT email, username, password, "profilePicture" FROM public."Users";`;
+            const queryString = `SELECT email, username, password, "profilePicture" FROM "Users";`;
             try {
                 resolve(await this.query(queryString));
             } catch (err) {
@@ -84,7 +88,7 @@ class DBHelper {
     getOpenedUserCartId(email) {
         // here we take into account that the user already exists and validated
         return new Promise(async (resolve, reject) => {
-            const queryString = `SELECT "cartId" FROM public."Carts" WHERE "userId" ='${email}' AND "checkedOut" = false;`;
+            const queryString = `SELECT "cartId" FROM "Carts" WHERE "userId" ='${email}' AND "checkedOut" = false;`;
             try {
                 const data = await this.query(queryString, true);
                 resolve(data?.cartId || null);
@@ -93,9 +97,10 @@ class DBHelper {
             }
         });
     }
+
     getPasswordByEmail(email) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `SELECT password FROM public."Users" WHERE email = '${email}'`;
+            const queryString = `SELECT password FROM "Users" WHERE email = '${email}'`;
             try {
                 const data = await this.query(queryString, true);
                 resolve(data?.password || null);
@@ -104,9 +109,10 @@ class DBHelper {
             }
         });
     }
+
     getUser(email, password) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `SELECT email, username, "profilePicture" FROM public."Users" WHERE email = '${email}' AND password = '${password}';`;
+            const queryString = `SELECT email, username, "profilePicture" FROM "Users" WHERE email = '${email}' AND password = '${password}';`;
             try {
                 const userData = await this.query(queryString, true);
                 if (userData !== null) {
@@ -114,7 +120,7 @@ class DBHelper {
                     let cartId = await this.getOpenedUserCartId(email);
                     if (!cartId) {
                         await this.query(
-                            `INSERT INTO public."Carts"("userId", "dateCreated", "checkedOut") VALUES ( '${email}',  NOW(), false);`
+                            `INSERT INTO "Carts"("userId", "dateCreated", "checkedOut") VALUES ( '${email}',  NOW(), false);`
                         );
                         cartId = await this.getOpenedUserCartId(email);
                     } else {
@@ -147,7 +153,7 @@ class DBHelper {
 
     addUser(email, username, password) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `INSERT INTO public."Users" ("email","username","password","profilePicture")
+            const queryString = `INSERT INTO "Users" ("email","username","password","profilePicture")
                             VALUES ('${email}','${username}','${password}','${DEFAULT_USER_PROFILE_PICTURE}')`;
             try {
                 await this.query(queryString);
@@ -162,22 +168,31 @@ class DBHelper {
         });
     }
 
-    updateUserPassword(email, password) {
+    updateUserField(email, key, value) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `UPDATE public."Users" SET password = '${password}' WHERE "email" = '${email}';`;
+            const queryString = `UPDATE "Users" SET "${key}" = '${value}' WHERE "email" = '${email}';`;
             try {
                 await this.query(queryString);
-                resolve(message.success.ADDED);
+                resolve(message.success.UPDATED);
             } catch (err) {
                 reject(message.error.UNKNOWN_DATABASE_ERROR);
             }
         });
     }
+
+    updateUserPassword(email, password) {
+        return this.updateUserField(email, "password", password);
+    }
+
+    updateUserProfilePicture(email, profilePicture) {
+        return this.updateUserField(email, "profilePicture", profilePicture);
+    }
+
     getProducts(productId) {
         return new Promise(async (resolve, reject) => {
             let queryString;
             if (!productId) {
-                queryString = `SELECT *FROM public."Products";`;
+                queryString = `SELECT *FROM "Products";`;
             } else {
                 let productIds;
                 if (Array.isArray(productId)) {
@@ -185,7 +200,7 @@ class DBHelper {
                 } else {
                     productIds = [productId];
                 }
-                queryString = `SELECT * FROM public."Products" WHERE id IN ('${productIds.join(
+                queryString = `SELECT * FROM "Products" WHERE id IN ('${productIds.join(
                     "','"
                 )}');`;
             }
@@ -199,7 +214,7 @@ class DBHelper {
 
     getProduct(id) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `SELECT * FROM public."Products" WHERE id = '${id}'`;
+            const queryString = `SELECT * FROM "Products" WHERE id = '${id}'`;
             try {
                 resolve(await this.query(queryString, true));
             } catch (err) {
@@ -210,7 +225,7 @@ class DBHelper {
 
     _getCartProduct(cartId, productId) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `SELECT "cartId", "productId", "quantity" FROM public."CartItems" 
+            const queryString = `SELECT "cartId", "productId", "quantity" FROM "CartItems" 
                                     WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
             try {
                 resolve(await this.query(queryString, true));
@@ -234,7 +249,7 @@ class DBHelper {
 
     _removeCartProduct(cartId, productId) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `DELETE from public."CartItems" WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
+            const queryString = `DELETE from "CartItems" WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
             try {
                 resolve(await this.query(queryString));
             } catch (err) {
@@ -245,7 +260,7 @@ class DBHelper {
 
     _updateCartProduct(cartId, productId, quantity) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `UPDATE public."CartItems" SET quantity= ${quantity} WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
+            const queryString = `UPDATE "CartItems" SET quantity= ${quantity} WHERE "cartId" = '${cartId}' AND "productId" = '${productId}'`;
             try {
                 resolve(await this.query(queryString));
             } catch (err) {
@@ -256,7 +271,7 @@ class DBHelper {
 
     _insertProductToCart(cartId, productId, quantity) {
         return new Promise(async (resolve, reject) => {
-            const queryString = `INSERT INTO public."CartItems"("cartId", "productId", "quantity")VALUES (${cartId}, ${productId}, ${quantity})`;
+            const queryString = `INSERT INTO "CartItems"("cartId", "productId", "quantity")VALUES (${cartId}, ${productId}, ${quantity})`;
             try {
                 resolve(await this.query(queryString));
             } catch (err) {

@@ -11,3 +11,4 @@ public
 *.sw*
 
 src/utils/Mailer/authConfig.js
+src/assets
