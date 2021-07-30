@@ -1,5 +1,4 @@
 import statusCode from "http-status-codes";
-import dbHelper from "../database/dbHelper.js";
 import {createToken /*,validateToken*/} from "../utils/jsonTokenHandler.js";
 import {addUserImageFullPath} from "../utils/strings.js";
 import {Response} from "./shared.js";
@@ -8,10 +7,11 @@ import {sendPasswordToUser} from "../utils/Mailer/mailer.js";
 import uploadSingleFile from "../middleware/imageUpload.js";
 import authenticateJWT from "../middleware/authentication.js";
 import {getFullUrl} from "../utils/helpers.js";
+import usersHelper from "../database/usersHelper.js";
 const {StatusCodes} = statusCode;
 export default router => {
     router.get(`/api/users`, (req, res) => {
-        dbHelper.getUsers().then(users => {
+        usersHelper.getUsers().then(users => {
             res.send(new Response(users, null));
         });
     });
@@ -21,7 +21,7 @@ export default router => {
         if (!email || !password) {
             res.send(new Response(null, message.error.INVALID_CREDENTIALS));
         } else {
-            dbHelper
+            usersHelper
                 .getUser(email, password)
                 .then(userData => {
                     if (userData) {
@@ -46,7 +46,7 @@ export default router => {
     });
     router.post(`/api/user`, async (req, res) => {
         const {email, username, password} = req.body;
-        dbHelper
+        usersHelper
             .addUser(email, username, password)
             .then(() => {
                 res.send(new Response(message.success.ADDED, null));
@@ -62,7 +62,7 @@ export default router => {
             res.send(new Response(null, message.error.INVALID_REQUEST_BODY));
             return;
         }
-        dbHelper
+        usersHelper
             .getPasswordByEmail(email)
             .then(oldPassword => {
                 if (oldPassword) {
@@ -74,7 +74,7 @@ export default router => {
                             )
                         );
                     } else {
-                        dbHelper
+                        usersHelper
                             .updateUserPassword(email, password)
                             .then(() => {
                                 res.send(
@@ -102,7 +102,7 @@ export default router => {
             res.send(new Response(null, message.error.INVALID_REQUEST_BODY));
             return;
         }
-        dbHelper
+        usersHelper
             .getPasswordByEmail(email)
             .then(password => {
                 if (password) {
@@ -137,7 +137,7 @@ export default router => {
                 const dbPath = `${getFullUrl(req)}/uploads/${
                     req.file.filename
                 }`;
-                dbHelper
+                usersHelper
                     .updateUserProfilePicture(userEmail, dbPath)
                     .then(() => {
                         res.send(new Response(dbPath, null));

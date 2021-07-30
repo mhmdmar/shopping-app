@@ -33,7 +33,7 @@ function addProductsImageFullPath(request, products) {
     return products;
 }
 
-function validateNumber(input) {
+function convertToNumber(input) {
     if (isNaN(input)) {
         input = 1;
     } else if (typeof input !== "number") {
@@ -46,5 +46,5 @@ export {
     addUserImageFullPath,
     addProductImageFullPath,
     addProductsImageFullPath,
-    validateNumber
+    convertToNumber
 };

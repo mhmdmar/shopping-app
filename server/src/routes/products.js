@@ -1,4 +1,4 @@
-import dbHelper from "../database/dbHelper.js";
+import productsHelper from "../database/productsHelper.js";
 import {message} from "../utils/constants.js";
 import {
     addProductImageFullPath,
@@ -9,7 +9,7 @@ import {Response} from "./shared.js";
 export default router => {
     router.get(`/api/products`, (req, res) => {
         const {productId} = req.query;
-        dbHelper
+        productsHelper
             .getProducts(productId)
             .then(products => {
                 res.send(
@@ -22,7 +22,7 @@ export default router => {
     });
     router.get(`/api/product`, (req, res) => {
         const {id} = req.query;
-        dbHelper
+        productsHelper
             .getProduct(id)
             .then(product => {
                 if (product) {
