@@ -1,5 +1,5 @@
+import statusCode from "http-status-codes";
 import dbHelper from "../database/dbHelper.js";
-import {StatusCodes} from "http-status-codes";
 import {createToken /*,validateToken*/} from "../utils/jsonTokenHandler.js";
 import {addUserImageFullPath} from "../utils/strings.js";
 import {Response} from "./shared.js";
@@ -8,7 +8,7 @@ import {sendPasswordToUser} from "../utils/Mailer/mailer.js";
 import uploadSingleFile from "../middleware/imageUpload.js";
 import authenticateJWT from "../middleware/authentication.js";
 import {getFullUrl} from "../utils/helpers.js";
-
+const {StatusCodes} = statusCode;
 export default router => {
     router.get(`/api/users`, (req, res) => {
         dbHelper.getUsers().then(users => {
