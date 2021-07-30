@@ -75,5 +75,4 @@ class DBHelper {
     }
 }
 
-const dbHelper = new DBHelper();
-export default dbHelper;
+export default new DBHelper();
