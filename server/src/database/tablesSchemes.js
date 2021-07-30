@@ -26,7 +26,7 @@ export default {
         {
             name: 'public."Carts"',
             columns: [
-                '"cartId" integer NOT NULL DEFAULT nextval(\'"Carts_cartId_seq"\'::regclass)',
+                '"cartId" SERIAL',
                 '"userId" text COLLATE pg_catalog."default" NOT NULL',
                 '"dateCreated" date',
                 '"checkedOut" boolean NOT NULL',
@@ -36,7 +36,7 @@ export default {
         {
             name: 'public."CartItems"',
             columns: [
-                "id integer NOT NULL DEFAULT nextval('\"CartItems_id_seq\"'::regclass)",
+                "id SERIAL",
                 '"cartId" integer NOT NULL',
                 '"productId" text COLLATE pg_catalog."default" NOT NULL',
                 "quantity integer NOT NULL",

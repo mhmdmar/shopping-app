@@ -22,6 +22,9 @@ class DBHelper {
                 await this.initDatabase();
                 resolve();
             } catch (err) {
+                if (err) {
+                    console.error(err);
+                }
                 reject(err);
             }
         });
@@ -205,7 +208,8 @@ class DBHelper {
                 )}');`;
             }
             try {
-                resolve(await this.query(queryString));
+                const products = (await this.query(queryString)) || [];
+                resolve(products);
             } catch (err) {
                 reject(message.error.UNKNOWN_DATABASE_ERROR);
             }
