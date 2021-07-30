@@ -5,17 +5,18 @@ import tablesSchemes from "./tablesSchemes.js";
 const {Client} = pg;
 
 class DBHelper {
+    static client
     constructor() {
-        this.client = new Client(dbConfig);
+        DBHelper.client = new Client(dbConfig);
     }
 
     _connect() {
-        if (this.client._connected) {
+        if (DBHelper.client._connected) {
             return;
         }
         return new Promise(async (resolve, reject) => {
             try {
-                await this.client.connect();
+                await DBHelper.client.connect();
                 await this.initDatabase();
                 resolve();
             } catch (err) {
@@ -31,7 +32,7 @@ class DBHelper {
         return new Promise(async (resolve, reject) => {
             try {
                 await this._connect();
-                const {rows} = await this.client.query(queryString);
+                const {rows} = await DBHelper.client.query(queryString);
                 resolve(
                     rows?.length > 0 ? (singleResult ? rows[0] : rows) : null
                 );
