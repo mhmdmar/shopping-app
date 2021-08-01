@@ -1,11 +1,11 @@
-import dbHelper from "../database/dbHelper.js";
 import authenticateJWT from "../middleware/authentication.js";
 import {Response} from "./shared.js";
 import {message} from "../utils/constants.js";
+import cartHelper from "../database/cartHelper.js";
 export default router => {
     router.get(`/api/cart`, authenticateJWT, (req, res) => {
         const {userEmail} = req;
-        dbHelper
+        cartHelper
             .getCart(userEmail)
             .then(items => {
                 res.send(new Response(items, null));
@@ -18,7 +18,7 @@ export default router => {
         const {userEmail} = req;
         const {cartId, productId, quantity} = req.body;
         if (cartId && userEmail && productId) {
-            dbHelper
+            cartHelper
                 .addProductToCart(userEmail, cartId, productId, quantity)
                 .then(() => {
                     res.send(new Response(message.success.ADDED, null));
@@ -41,7 +41,7 @@ export default router => {
         const {userEmail} = req;
         const {cartId, productId, quantity} = req.body;
         if (cartId && userEmail && productId) {
-            dbHelper
+            cartHelper
                 .updateProductToCart(userEmail, cartId, productId, quantity)
                 .then(() => {
                     res.send(new Response(message.success.UPDATED, null));
