@@ -8,9 +8,9 @@ import {Response} from "./shared.js";
 
 export default router => {
     router.get(`/api/products`, (req, res) => {
-        const {productId} = req.query;
+        const {id} = req.query;
         productsHelper
-            .getProducts(productId)
+            .getProducts(id)
             .then(products => {
                 res.send(
                     new Response(addProductsImageFullPath(req, products), null)
