@@ -40,6 +40,8 @@ export const cartMixin = {
                     .finally(() => {
                         this.setIsLoading(false);
                     });
+            } else {
+                this.items = [];
             }
         }
     }

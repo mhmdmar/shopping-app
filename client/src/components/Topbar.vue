@@ -98,8 +98,10 @@
         background-color: inherit;
     }
     .right-menu-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        @media (min-width: 700px) {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
     }
 </style>
