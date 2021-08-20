@@ -17,7 +17,7 @@ export const productsService = {
         const idList = productsList.map(product => product.productId);
         const res = await API.get(`/products`, {
             params: {
-                productId: idList
+                id: idList
             }
         });
         const {error, data} = res.data;
